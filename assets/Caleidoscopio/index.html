@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio Caleidoscopio Interattivo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        main { /* p5.js di default crea un <main> per il canvas */
+            margin-top: 0;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        #controls-container {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 580px;
+        }
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: space-between;
+        }
+        .control-group label {
+            font-weight: bold;
+            flex-basis: 180px;
+            text-align: left;
+        }
+        .control-group .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-grow: 1;
+        }
+        .control-group input[type="range"] {
+            flex-grow: 1;
+            /* Modifiche per rimuovere il "riquadro" */
+            border: none; /* Rimuove il bordo standard */
+            outline: none; /* Rimuove l'outline al focus */
+            padding: 0; /* Rimuove padding interno */
+            /* Per un reset più completo, potresti decommentare le righe seguenti
+               e poi stilizzare esplicitamente il thumb e la track se necessario.
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent; 
+            */
+        }
+        .control-group span {
+            min-width: 30px;
+            text-align: right;
+            font-weight: bold;
+        }
+        #instructions {
+            margin-top: 10px;
+            font-style: italic;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div id="controls-container">
+        <div class="control-group" id="numSpicchiControl">
+            <label for="numSpicchiSlider">Numero di spicchi:</label>
+            <div class="slider-container">
+                <input type="range" id="numSpicchiSlider"> <span id="numSpicchiDisplay">6</span>
+            </div>
+        </div>
+        <div class="control-group" id="angleDisplayControl">
+            <label>Angolo tra linee rosse:</label>
+            <span id="bisectorAngleDisplay">60°</span>
+        </div>
+        <div class="control-group" id="colorPickerControl">
+            <label for="colorPickerInput">Colore disegno:</label>
+            <input type="color" id="colorPickerInput"> </div>
+        <div class="control-group" id="strokeWeightControl">
+            <label for="strokeWeightSlider">Spessore tratto:</label>
+            <div class="slider-container">
+                <input type="range" id="strokeWeightSlider">
+                <span id="strokeWeightDisplay">4</span>
+            </div>
+        </div>
+        <div id="instructions"><p><em>Premi SPAZIO per pulire il disegno.</em></p></div>
+    </div>
+
+    <script>
+        let baseDrawing;
+        let numSpicchi; 
+        let numSpicchiSlider;
+        let numSpicchiDisplay;
+        let bisectorAngleDisplay; 
+
+        let colorPicker;
+        
+        let strokeWeightSlider;
+        let strokeWeightDisplay;
+        let currentStrokeWeight = 4;
+
+        const allowedSpicchiValues = [2, 4, 6, 8, 10, 12, 18, 20, 24];
+        let currentSpicchiIndex = 2; 
+
+        function setup() {
+          createCanvas(600, 600);
+          angleMode(DEGREES);
+
+          baseDrawing = createGraphics(width, height);
+          baseDrawing.clear();
+
+          // --- Controlli UI ---
+          numSpicchiSlider = select('#numSpicchiSlider');
+          numSpicchiSlider.elt.min = 0; 
+          numSpicchiSlider.elt.max = allowedSpicchiValues.length - 1; 
+          numSpicchiSlider.elt.value = currentSpicchiIndex; 
+          numSpicchiSlider.elt.step = 1;
+          // numSpicchiSlider.style('width', '100%'); // Già gestito da flex-grow nel CSS
+
+          numSpicchiDisplay = select('#numSpicchiDisplay');
+          numSpicchi = allowedSpicchiValues[currentSpicchiIndex]; 
+          numSpicchiDisplay.html(numSpicchi.toString());
+
+          bisectorAngleDisplay = select('#bisectorAngleDisplay');
+          updateBisectorAngleDisplay();
+
+          colorPicker = select('#colorPickerInput');
+          colorPicker.value('#E74C3C'); 
+
+          strokeWeightSlider = select('#strokeWeightSlider');
+          strokeWeightSlider.elt.min = 1;
+          strokeWeightSlider.elt.max = 20;
+          strokeWeightSlider.elt.value = currentStrokeWeight;
+          strokeWeightSlider.elt.step = 1;
+          // strokeWeightSlider.style('width', '100%'); // Già gestito da flex-grow
+
+          strokeWeightDisplay = select('#strokeWeightDisplay');
+          strokeWeightDisplay.html(currentStrokeWeight.toString());
+
+
+          // Event Listeners
+          numSpicchiSlider.input(() => {
+            currentSpicchiIndex = numSpicchiSlider.value();
+            numSpicchi = allowedSpicchiValues[currentSpicchiIndex];
+            numSpicchiDisplay.html(numSpicchi.toString());
+            updateBisectorAngleDisplay();
+            baseDrawing.clear();
+          });
+
+          strokeWeightSlider.input(() => {
+            currentStrokeWeight = strokeWeightSlider.value();
+            strokeWeightDisplay.html(currentStrokeWeight.toString());
+          });
+
+          background(245);
+        }
+
+        function updateBisectorAngleDisplay() {
+            if (numSpicchi > 0) {
+                let angleBetweenBisectors = 360 / numSpicchi;
+                bisectorAngleDisplay.html(angleBetweenBisectors.toFixed(1) + "°");
+            } else {
+                bisectorAngleDisplay.html("N/A");
+            }
+        }
+
+        function draw() {
+          background(245);
+
+          if (mouseIsPressed && mouseY < height && mouseX < width && mouseX > 0 && mouseY > 0) {
+            let currentColorValue = colorPicker.value(); 
+            let p5Color = color(currentColorValue); 
+            
+            baseDrawing.stroke(red(p5Color), green(p5Color), blue(p5Color), 180); 
+            baseDrawing.strokeWeight(currentStrokeWeight);
+            baseDrawing.line(pmouseX, pmouseY, mouseX, mouseY);
+          }
+
+          translate(width / 2, height / 2);
+          
+          let anglePerSpicchio = 360 / numSpicchi;
+
+          // Disegna le linee bisettrici rosse
+          if (numSpicchi > 0) { 
+            push();
+            stroke(255, 0, 0, 100); 
+            strokeWeight(1.5); 
+            for (let i = 0; i < numSpicchi; i++) {
+              let bisectorAngle = (i * anglePerSpicchio) + (anglePerSpicchio / 2);
+              let x2 = cos(bisectorAngle) * (max(width, height) / 1.5); 
+              let y2 = sin(bisectorAngle) * (max(width, height) / 1.5);
+              line(0, 0, x2, y2);
+            }
+            pop();
+          }
+          
+          // Disegna gli spicchi del caleidoscopio
+          if (numSpicchi > 0) {
+            for (let i = 0; i < numSpicchi; i++) {
+              push(); 
+              rotate(i * anglePerSpicchio); 
+              
+              if (i % 2 === 1) {
+                scale(1, -1); 
+              }
+              
+              imageMode(CENTER); 
+              image(baseDrawing, 0, 0); 
+              pop(); 
+            }
+          }
+        }
+
+        function keyPressed() {
+          if (key === ' ') {
+            baseDrawing.clear(); 
+            background(245);     
+          }
+        }
+    </script>
+</body>
+</html>
