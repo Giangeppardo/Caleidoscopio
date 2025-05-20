@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caleidoscopio Interattivo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
+    <style>
+        html, body {
+            height: 100%; 
+            margin: 0;
+        }
+
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #000000; 
+            color: #FFFFFF; 
+            font-size: 12pt; 
+            display: flex; 
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden; 
+        }
+        body.simulation-active, body.lab-active { 
+            overflow: hidden !important; 
+        }
+        body.content-visible {
+            overflow-y: auto;  
+        }
+
+        nav.top-menu {
+            background-color: rgba(10, 10, 10, 0.85); 
+            backdrop-filter: blur(5px); 
+            -webkit-backdrop-filter: blur(5px);
+            width: 100%;
+            position: sticky; 
+            top: 0; 
+            z-index: 1000;
+            flex-shrink: 0;
+            padding: 8px 0; 
+            border-bottom: 1px solid #333333; 
+            transition: top 0.3s ease-in-out; 
+        }
+
+        nav.top-menu ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            width: 100%;
+        }
+
+        nav.top-menu li {
+            flex-grow: 1; 
+        }
+
+        nav.top-menu li a {
+            display: block; 
+            color: #E0E0E0; 
+            text-align: center; 
+            padding: 18px 15px; 
+            text-decoration: none;
+            font-weight: normal; 
+            text-transform: none;
+            letter-spacing: normal;
+            transition: color 0.3s ease, border-bottom-color 0.3s ease, background-color 0.3s ease;
+            cursor: pointer;
+            border-bottom: 2px solid transparent; 
+            font-size: 10pt; 
+        }
+
+        nav.top-menu li a:hover,
+        nav.top-menu li a.active {
+            color: #FFFFFF; 
+            border-bottom-color: #FFFFFF; 
+            background-color: rgba(255, 255, 255, 0.1); 
+        }
+        
+        .main-content-area {
+            flex-grow: 1;
+            width: 100%;
+            display: flex; 
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        #simulationContainer { 
+            display: none; 
+            flex-direction: column; 
+            align-items: center;
+            justify-content: flex-start; 
+            width: 100%;
+            height: 100%; 
+        }
+
+        #kaleidoscopeCanvas { 
+            box-shadow: 0px 0px 20px rgba(200, 200, 200, 0.3);
+        }
+        
+        #homePageTitle {
+            display: none; 
+            text-align: center;
+            padding: 15px 0; /* Ridotto padding per avvicinarlo al canvas */
+            width: 100%;
+            flex-shrink: 0; 
+        }
+        #homePageTitle h1 {
+            color: #FFFFFF;
+            margin: 0;
+            font-size: 2.5em; /* MODIFICATO: Ridotta dimensione font (era 2.8em) */
+            /* Rimosso eventuale bordo o box-shadow da qui se presente prima */
+        }
+
+
+        .content-section {
+            display: none; 
+            padding: 25px;
+            margin: 0 auto 20px auto; 
+            width: 100%; 
+            max-width: 800px; 
+            background-color: transparent; 
+        }
+        .content-section h2 {
+            color: #E0E0E0; 
+            border-bottom: 2px solid #777777; 
+            padding-bottom: 10px; margin-top: 20px; 
+            font-size: 1.6em; 
+        }
+        #argomento4 p {
+            text-align: left;
+            margin-bottom: 10px;
+        }
+        #argomento4 a { 
+            color: #8ab4f8; 
+            text-decoration: none;
+        }
+        #argomento4 a:hover {
+            text-decoration: underline;
+        }
+
+        #p5LabContainer { 
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+            gap: 15px;
+            margin-top: 10px; 
+            width: 100%;
+        }
+        #p5CanvasContainer { 
+            box-shadow: 0 0 10px rgba(255,255,255,0.2); 
+        }
+        #controls-container-p5 { 
+            padding: 15px;
+            background-color: #181818; 
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: auto; 
+            min-width: 300px; 
+            max-width: 580px; 
+            color: #E0E0E0; 
+        }
+        #controls-container-p5 .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: space-between;
+        }
+        #controls-container-p5 .control-group label {
+            font-weight: normal; 
+            flex-basis: 150px; 
+            text-align: left;
+        }
+        #controls-container-p5 .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-grow: 1;
+        }
+        #controls-container-p5 input[type="range"] {
+            flex-grow: 1;
+            border: none; 
+            outline: none;
+            padding: 0; 
+        }
+        #controls-container-p5 .control-group span { 
+            min-width: 30px;
+            text-align: right;
+            font-weight: normal;
+        }
+         #controls-container-p5 input[type="color"] {
+            width: 40px; height: 30px; padding: 0; border: 1px solid #555;
+            background: none; 
+        }
+        #controls-container-p5 #instructions {
+            margin-top: 5px;
+            font-style: italic;
+            font-size: 0.9em;
+            color: #bbb;
+        }
+
+        footer {
+            text-align: center; padding: 25px 20px;
+            background-color: #111111; 
+            color: #E0E0E0; 
+            width: 100%;
+            flex-shrink: 0;
+            margin-top: 30px;
+            border-top: 1px solid #333333; 
+            font-size: 10pt; 
+            display: none; 
+        }
+
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body>
+    <nav class="top-menu">
+        <ul>
+            <li><a data-target="simulationContainer" class="active">Home</a></li>
+            <li><a data-target="argomento1">Cos'è?</a></li>
+            <li><a data-target="argomento2">Come Funziona?</a></li>
+            <li><a data-target="argomento3">Laboratorio</a></li> 
+            <li><a data-target="argomento4">About</a></li>
+        </ul>
+    </nav>
+    
+    <!-- Il page-title-container generale è stato rimosso dall'HTML, 
+         il titolo "CALEIDOSCOPIO" è ora specifico per la home e si trova dentro #simulationContainer -->
+
+    <div class="main-content-area">
+        <div id="simulationContainer">
+            <canvas id="kaleidoscopeCanvas"></canvas>
+            <div id="homePageTitle" style="display: none;"> 
+                 <h1>CALEIDOSCOPIO</h1>
+            </div>
+        </div>
+
+        <section id="argomento1" class="content-section">
+            <h2>Cos'è un caleidoscopio?</h2>
+            <p>Il caleidoscopio è uno strumento ottico che, attraverso una serie di specchi inclinati, crea una molteplicità di immagini simmetriche a partire da piccoli oggetti colorati posti al suo interno. Il termine deriva dal greco καλός (kalós), "bello", εἶδος (eîdos), "immagine", e σκοπέω (skopéō), "guardare". </p>
+            <p>Inventato da Sir David Brewster nel 1816, il caleidoscopio è diventato rapidamente un giocattolo popolare, ma ha anche trovato applicazioni nell'arte e nel design per la sua capacità di generare pattern complessi e affascinanti.</p>
+            <p>Il caleidoscopio sfrutta il principio della riflessione tra specchi, conosciuto già dall’ottica classica, ma fu inventato come oggetto nel 1816 da David Brewster mentre studiava la polarizzazione della luce. Venne brevettato l’anno successivo. Esso è costituito da tre specchi infilati in un tubo con un buco ad un’estremità e dei vetrini colorati in un doppio fondo dall’altra parte. La costruzione del caleidoscopio venne programmata per il 1817 ma prima che l’oggetto potesse uscire l’idea venne copiata e l’uscita preceduta a Londra e Parigi.</p>
+        </section>
+        <section id="argomento2" class="content-section">
+            <h2>Come funziona?</h2>
+            <p>Il principio di funzionamento di un caleidoscopio si basa sulla riflessione multipla della luce. All'interno di un tubo sono posizionati, longitudinalmente, due o più specchi piani. Comunemente, si usano tre specchi disposti a formare un prisma a base triangolare equilatera.</p>
+            <p>Ad un'estremità del tubo si trova una camera traslucida contenente piccoli frammenti colorati. La luce che attraversa questi oggetti viene riflessa dagli specchi, creando un pattern simmetrico. Ruotando il tubo, gli oggetti si muovono, generando nuove configurazioni. </p>
+            <p>Solitamente il numero di specchi impiegati è tre, i quali vengono disposti a triangolo equilatero, in modo da formare la seguente sequenza di angoli: 60°-60°-60° (ma in realtà sono possibili altre due combinazioni: 45°-45°-90° e 30°-60°-90°). Per costruire il caleidoscopio, è stato necessario stabilire il rapporto che vi era tra il diametro del tubo, e la larghezza degli specchi stessi. Si è quindi studiata la proporzione tra triangolo equilatero e la circonferenza ad esso circoscritta.</p>
+            <h2>Le simmetrie</h2>
+            <p>L’immagine del caleidoscopio è originata dalla continua riflessione dei frammenti colorati tra uno specchio e l’altro, moltiplicati in modo apparentemente perfetto. Il processo è quello di una simmetria centrale, e ovviamente il numero delle riflessioni dipende dagli angoli tra gli specchi, che di solito formano un prisma a base triangolare isoscele, riflettente all’interno. Le simmetrie delle forme in movimento del caleidoscopio sono il risultato dell’intersezione dello studio delle riflessioni con quello delle simmetrie centrali, che tante applicazioni hanno prodotto nell’architettura e nelle arti, ma ancora di più nella decorazione degli oggetti.</p>
+            <p>Esse hanno offerto a Coxeter, uno dei più noti matematici del XX secolo, lo spunto per nuove ricerche legate a spazi n-dimensionali che lo hanno portato alla classificazione dei politopi, che sono gli equivalenti dei poliedri nelle dimensioni superiori alla terza, che possono essere costruiti matematicamente ma solo immaginati nel mondo reale. Coxeter fu interessato dalle simmetrie prodotte dal caleidoscopio e da qui ne derivò lo studio sui gruppi di simmetrie, chiamati Gruppi di Coxeter.</p>
+            <p>I gruppi di Coxeter sono strutture algebriche che descrivono le simmetrie generate da riflessioni. In termini semplici, un gruppo di Coxeter è un insieme di trasformazioni (come riflessioni, rotazioni, ecc.) che possono essere composte tra loro. In pratica, i gruppi di Coxeter danno un linguaggio matematico preciso per studiare strutture geometriche simmetriche, spesso in modo molto visuale tramite diagrammi di Coxeter.</p>
+        </section>
+        
+        <section id="argomento3" class="content-section">
+            <h2>Laboratorio Caleidoscopio p5.js</h2>
+            <p>Disegna sul canvas sottostante. Modifica il numero di "spicchi" (riflessioni), il colore e lo spessore del tratto per vedere come cambiano i pattern caleidoscopici. Premi SPAZIO per pulire il disegno.</p>
+            <div id="p5LabContainer">
+                <div id="controls-container-p5">
+                    <div class="control-group" id="numSpicchiControl-p5">
+                        <label for="numSpicchiSlider-p5">Numero di spicchi:</label>
+                        <div class="slider-container">
+                            <input type="range" id="numSpicchiSlider-p5"> <span id="numSpicchiDisplay-p5">6</span>
+                        </div>
+                    </div>
+                     <div class="control-group" id="angleDisplayControl-p5">
+                        <label>Angolo tra linee rosse:</label>
+                        <span id="bisectorAngleDisplay-p5">60°</span>
+                    </div>
+                    <div class="control-group" id="colorPickerControl-p5">
+                        <label for="colorPickerInput-p5">Colore disegno:</label>
+                        <input type="color" id="colorPickerInput-p5"> 
+                    </div>
+                    <div class="control-group" id="strokeWeightControl-p5">
+                        <label for="strokeWeightSlider-p5">Spessore tratto:</label>
+                        <div class="slider-container">
+                            <input type="range" id="strokeWeightSlider-p5">
+                            <span id="strokeWeightDisplay-p5">4</span>
+                        </div>
+                    </div>
+                    <div id="instructions-p5"><p><em>Premi SPAZIO per pulire il disegno.</em></p></div>
+                </div>
+                <div id="p5CanvasContainer" style="margin-top:15px;"></div>
+            </div>
+             <p style="height: 300px;">Testo aggiuntivo per forzare lo scroll...</p> 
+             <p>Altro testo...</p>
+             <p>Ancora testo...</p>
+        </section>
+
+        <section id="argomento4" class="content-section">
+            <h2>About (Sitografia)</h2>
+            <p>Introduzione storica: <a href="https://it.wikipedia.org/wiki/Caleidoscopio" target="_blank" rel="noopener noreferrer">Wikipedia - Caleidoscopio</a></p>
+            <p>Funzionamento: <a href="https://www.giovaniperlascienza.it/site/le-nostre-attivita/attivita-1/il-caleidoscopio/" target="_blank" rel="noopener noreferrer">Giovani per la Scienza</a></p>
+            <p>Gruppi di Coxeter: <a href="https://it.wikipedia.org/wiki/Gruppo_di_Coxeter" target="_blank" rel="noopener noreferrer">Wikipedia - Gruppo di Coxeter</a></p>
+            <p>Video (esempio): <a href="http://www.youtube.com" target="_blank" rel="noopener noreferrer">YouTube - Caleidoscopi</a></p>
+            <p>Parte matematica: <a href="https://web.math.princeton.edu/~jl5270/talks/mathematicsInKaleidoscopes.pdf" target="_blank" rel="noopener noreferrer">Princeton University - Mathematics In Kaleidoscopes (PDF)</a></p>
+        </section>
+    </div>
+
+    <footer>
+        <p>© Progetto a cura di Amadori Aurora e Nepi Lorenzo</p>
+        <p>ISIA U - Anno accademico 2024/25</p>
+    </footer>
+
+    <script>
+        const topMenuNav = document.querySelector('nav.top-menu');
+        // const pageTitleContainer = document.querySelector('.page-title-container'); // Rimosso riferimento al contenitore generale del titolo
+        const homePageTitle = document.getElementById('homePageTitle'); 
+        const pageFooter = document.querySelector('footer');
+
+        // --- Logica per nascondere/mostrare il menu durante lo scroll ---
+        let lastScrollTop = 0;
+        const menuHeight = topMenuNav ? topMenuNav.offsetHeight : 60; 
+        const scrollThreshold = 20; 
+
+        window.addEventListener('scroll', function() {
+            if (document.body.classList.contains('simulation-active') || 
+                (document.body.classList.contains('lab-active'))) { 
+                if (topMenuNav) {
+                    if (document.body.classList.contains('simulation-active') && homePageTitle && homePageTitle.style.display !== 'none') {
+                        topMenuNav.style.top = "0";
+                    }
+                }
+                return;
+            }
+
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (topMenuNav) {
+                if (scrollTop > lastScrollTop && scrollTop > menuHeight + scrollThreshold) {
+                    topMenuNav.style.top = `-${menuHeight + 20}px`; 
+                } else if (scrollTop < lastScrollTop || scrollTop <= scrollThreshold) {
+                    topMenuNav.style.top = "0"; 
+                }
+            }
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; 
+        }, false);
+
+
+        const autoKaleidoscope = (function() { /* ... (codice simulazione automatica invariato) ... */ 
+            let canvas, ctx, centerX, centerY;
+            let simColorsInternal, numReflections, pieces, NUM_PIECES;
+            let animationFrameId = null;
+            let isInitialized = false;
+            let isActive = false;
+            let isTakingFullAvailableSpace = false; 
+            const K_SIM_COLORS_INTERNAL = ["#FF5733", "#FFC300", "#DAF7A6", "#33FF57", "#33CFFF", "#A333FF", "#FF33A8", "#F06EAA"];
+            const K_NUM_REFLECTIONS = 7; 
+            const K_NUM_PIECES = 55;
+
+            function setupCanvasDimensions() {
+                if (!canvas || !topMenuNav) return;
+                if (isTakingFullAvailableSpace) {
+                    const currentMenuHeight = (topMenuNav && topMenuNav.style.display !== 'none') ? topMenuNav.offsetHeight : 0;
+                    const currentTitleHeight = (homePageTitle && homePageTitle.style.display !== 'none') ? homePageTitle.offsetHeight : 0;
+                    
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight - currentMenuHeight - currentTitleHeight; 
+                    canvas.style.border = "none"; 
+                } else {
+                    canvas.width = 500; 
+                    canvas.height = 400;
+                }
+                centerX = canvas.width / 2;
+                centerY = canvas.height / 2;
+                 if (isActive) generatePiecesInternal(); 
+            }
+            function init(canvasElementId) {
+                canvas = document.getElementById(canvasElementId);
+                if (!canvas) { return; } 
+                ctx = canvas.getContext('2d');
+                simColorsInternal = K_SIM_COLORS_INTERNAL;
+                numReflections = K_NUM_REFLECTIONS;
+                pieces = [];
+                NUM_PIECES = K_NUM_PIECES;
+                isInitialized = true;
+            }
+            function generatePiecesInternal() {
+                if (!isInitialized || !isActive || !ctx) return;
+                pieces.length = 0; 
+                const chamberRadius = Math.min(centerX, centerY) * 0.68;
+                for (let i = 0; i < NUM_PIECES; i++) {
+                    const type = Math.random() > 0.4 ? 'circle' : 'line'; 
+                    const dist = Math.random() * chamberRadius;
+                    const ang = Math.random() * Math.PI * 2;
+                    pieces.push({
+                        x: dist * Math.cos(ang), y: dist * Math.sin(ang), type: type,
+                        r: type === 'circle' ? (Math.random() * 4.5 + 1) : (Math.random() * 1.8 + 0.5),
+                        length: type === 'line' ? (Math.random() * 18 + 4) : 0,
+                        angle: type === 'line' ? (Math.random() * Math.PI) : 0,
+                        color: simColorsInternal[Math.floor(Math.random() * simColorsInternal.length)],
+                        vx: (Math.random() - 0.5) * 0.20, vy: (Math.random() - 0.5) * 0.20,
+                        va: type === 'line' ? (Math.random() - 0.5) * 0.0030 : 0
+                    });
+                }
+            }
+            function updatePiecesInternal() { 
+                if (!isInitialized || !isActive) return;
+                const chamberRadius = Math.min(centerX, centerY) * 0.72;
+                const edgeSoftness = 0.1;
+                pieces.forEach(piece => {
+                    piece.x += piece.vx; piece.y += piece.vy;
+                    if (piece.type === 'line') piece.angle += piece.va;
+                    const distSq = piece.x * piece.x + piece.y * piece.y;
+                    if (distSq > (chamberRadius * chamberRadius)) {
+                        const ang = Math.random() * Math.PI * 2;
+                        const newDist = Math.random() * chamberRadius * (1 - edgeSoftness);
+                        piece.x = newDist * Math.cos(ang); piece.y = newDist * Math.sin(ang);
+                        piece.vx = (Math.random() - 0.5) * 0.20; piece.vy = (Math.random() - 0.5) * 0.20;
+                        piece.color = simColorsInternal[Math.floor(Math.random() * simColorsInternal.length)];
+                        if (piece.type === 'circle') piece.r = Math.random() * 4.5 + 1;
+                        else { piece.r = Math.random() * 1.8 + 0.5; piece.length = Math.random() * 18 + 4; }
+                    }
+                });
+            }
+            function drawKaleidoscopeInternal() { 
+                if (!isInitialized || !isActive || !ctx) return;
+                ctx.fillStyle = 'black'; 
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < numReflections; i++) {
+                    ctx.save();
+                    ctx.translate(centerX, centerY);
+                    ctx.rotate((i * 2 * Math.PI) / numReflections);
+                    if (i % 2 !== 0) ctx.scale(-1, 1);
+                    pieces.forEach(piece => {
+                        if (piece.type === 'circle') {
+                            ctx.beginPath(); ctx.arc(piece.x, piece.y, piece.r, 0, Math.PI * 2);
+                            ctx.fillStyle = piece.color; ctx.fill();
+                        } else if (piece.type === 'line') {
+                            ctx.save(); ctx.translate(piece.x, piece.y); ctx.rotate(piece.angle);
+                            ctx.beginPath(); ctx.moveTo(-piece.length / 2, 0); ctx.lineTo(piece.length / 2, 0);
+                            ctx.strokeStyle = piece.color; ctx.lineWidth = piece.r; ctx.lineCap = 'round'; ctx.stroke();
+                            ctx.restore();
+                        }
+                    });
+                    ctx.restore();
+                }
+            }
+            function animationLoopInternal() {
+                if (!isActive || !isInitialized) {
+                    if (animationFrameId) cancelAnimationFrame(animationFrameId);
+                    animationFrameId = null; return;
+                }
+                updatePiecesInternal(); drawKaleidoscopeInternal();
+                animationFrameId = requestAnimationFrame(animationLoopInternal);
+            }
+            function handleResizeEvent() {
+                if (isActive && isTakingFullAvailableSpace) setupCanvasDimensions();
+            }
+            function start(takeFullSpace = false) {
+                if (!isInitialized) init('kaleidoscopeCanvas');
+                if (!isInitialized || !canvas) return;
+                isTakingFullAvailableSpace = takeFullSpace; isActive = true;
+                if (animationFrameId) cancelAnimationFrame(animationFrameId);
+                setupCanvasDimensions(); 
+                canvas.onclick = generatePiecesInternal;
+                if (isTakingFullAvailableSpace) window.addEventListener('resize', handleResizeEvent);
+                else window.removeEventListener('resize', handleResizeEvent);
+                generatePiecesInternal(); animationLoopInternal();
+            }
+            function stop() {
+                isActive = false;
+                if (animationFrameId) { cancelAnimationFrame(animationFrameId); animationFrameId = null; }
+                if (canvas) canvas.onclick = null;
+                window.removeEventListener('resize', handleResizeEvent);
+            }
+            return { init, start, stop };
+        })();
+
+        const interactiveKaleidoscopeLab = (function() { /* ... (codice laboratorio p5.js invariato) ... */ 
+            let p5Instance = null; 
+            let labIsActive = false;
+
+            const sketchCode = function(p) {
+                let baseDrawing;
+                let numSpicchi;
+                let numSpicchiSlider;
+                let numSpicchiDisplay;
+                let bisectorAngleDisplay;
+                let colorPicker;
+                let strokeWeightSlider;
+                let strokeWeightDisplay;
+                let currentStrokeWeight = 4;
+                const allowedSpicchiValues = [2, 4, 6, 8, 10, 12, 18, 20, 24];
+                let currentSpicchiIndex = 2;
+
+                p.setup = function() {
+                    let canvas = p.createCanvas(600, 600); 
+                    canvas.parent('p5CanvasContainer'); 
+                    p.angleMode(p.DEGREES);
+
+                    baseDrawing = p.createGraphics(p.width, p.height);
+                    baseDrawing.clear();
+
+                    numSpicchiSlider = p.select('#numSpicchiSlider-p5');
+                    numSpicchiSlider.elt.min = 0;
+                    numSpicchiSlider.elt.max = allowedSpicchiValues.length - 1;
+                    numSpicchiSlider.elt.value = currentSpicchiIndex;
+                    numSpicchiSlider.elt.step = 1;
+
+                    numSpicchiDisplay = p.select('#numSpicchiDisplay-p5');
+                    numSpicchi = allowedSpicchiValues[currentSpicchiIndex];
+                    numSpicchiDisplay.html(numSpicchi.toString());
+
+                    bisectorAngleDisplay = p.select('#bisectorAngleDisplay-p5');
+                    updateBisectorAngleDisplayP5();
+
+                    colorPicker = p.select('#colorPickerInput-p5');
+                    if (!colorPicker.elt) { 
+                        colorPicker = document.getElementById('colorPickerInput-p5');
+                        if (colorPicker) colorPicker.value = '#E74C3C'; 
+                    } else {
+                         colorPicker.value('#E74C3C');
+                    }
+
+                    strokeWeightSlider = p.select('#strokeWeightSlider-p5');
+                    strokeWeightSlider.elt.min = 1;
+                    strokeWeightSlider.elt.max = 20;
+                    strokeWeightSlider.elt.value = currentStrokeWeight;
+                    strokeWeightSlider.elt.step = 1;
+
+                    strokeWeightDisplay = p.select('#strokeWeightDisplay-p5');
+                    strokeWeightDisplay.html(currentStrokeWeight.toString());
+
+                    numSpicchiSlider.input(() => {
+                        currentSpicchiIndex = numSpicchiSlider.value();
+                        numSpicchi = allowedSpicchiValues[currentSpicchiIndex];
+                        numSpicchiDisplay.html(numSpicchi.toString());
+                        updateBisectorAngleDisplayP5();
+                        baseDrawing.clear();
+                    });
+
+                    strokeWeightSlider.input(() => {
+                        currentStrokeWeight = strokeWeightSlider.value();
+                        strokeWeightDisplay.html(currentStrokeWeight.toString());
+                    });
+                    p.background(245);
+                };
+
+                function updateBisectorAngleDisplayP5() {
+                    if (numSpicchi > 0) {
+                        let angleBetweenBisectors = 360 / numSpicchi;
+                        bisectorAngleDisplay.html(angleBetweenBisectors.toFixed(1) + "°");
+                    } else {
+                        bisectorAngleDisplay.html("N/A");
+                    }
+                }
+
+                p.draw = function() {
+                    p.background(245);
+                    if (p.mouseIsPressed && p.mouseY < p.height && p.mouseX < p.width && p.mouseX > 0 && p.mouseY > 0) {
+                        let currentColorValue;
+                        if (colorPicker.elt) { 
+                           currentColorValue = colorPicker.value();
+                        } else if (colorPicker) { 
+                           currentColorValue = colorPicker.value;
+                        } else {
+                            currentColorValue = '#E74C3C'; 
+                        }
+                        let p5Col = p.color(currentColorValue);
+                        
+                        baseDrawing.stroke(p.red(p5Col), p.green(p5Col), p.blue(p5Col), 180);
+                        baseDrawing.strokeWeight(currentStrokeWeight);
+                        baseDrawing.line(p.pmouseX, p.pmouseY, p.mouseX, p.mouseY);
+                    }
+
+                    p.translate(p.width / 2, p.height / 2); 
+                    
+                    let anglePerSpicchio = 360 / numSpicchi;
+
+                    if (numSpicchi > 0) { 
+                        p.push();
+                        p.stroke(255, 0, 0, 100); 
+                        p.strokeWeight(1.5); 
+                        for (let i = 0; i < numSpicchi; i++) {
+                            let bisectorAngle = (i * anglePerSpicchio) + (anglePerSpicchio / 2);
+                            let x2 = p.cos(bisectorAngle) * (p.max(p.width, p.height) / 1.5); 
+                            let y2 = p.sin(bisectorAngle) * (p.max(p.width, p.height) / 1.5);
+                            p.line(0, 0, x2, y2); 
+                        }
+                        p.pop();
+
+                        for (let i = 0; i < numSpicchi; i++) {
+                            p.push();
+                            p.rotate(i * anglePerSpicchio);
+                            if (i % 2 === 1) {
+                                p.scale(1, -1);
+                            }
+                            p.imageMode(p.CENTER);
+                            p.image(baseDrawing, 0, 0); 
+                            p.pop();
+                        }
+                    }
+                };
+
+                p.keyPressed = function() {
+                    if (p.key === ' ') {
+                        baseDrawing.clear();
+                        p.background(245);
+                    }
+                };
+            };
+
+            function startLab() {
+                if (!p5Instance && document.getElementById('p5CanvasContainer')) { 
+                    labIsActive = true;
+                    p5Instance = new p5(sketchCode, 'p5CanvasContainer');
+                } else if (p5Instance) {
+                    labIsActive = true;
+                    p5Instance.loop(); 
+                }
+            }
+
+            function stopLab() { 
+                labIsActive = false;
+                if (p5Instance) {
+                    p5Instance.noLoop(); 
+                }
+            }
+            return { start: startLab, stop: stopLab };
+        })();
+
+        const menuLinks = document.querySelectorAll('nav.top-menu li a');
+        const views = {
+            simulationContainer: document.getElementById('simulationContainer'),
+            argomento1: document.getElementById('argomento1'),
+            argomento2: document.getElementById('argomento2'),
+            argomento3: document.getElementById('argomento3'),
+            argomento4: document.getElementById('argomento4')
+        };
+
+        function showView(targetId) { 
+            Object.values(views).forEach(view => { if (view) view.style.display = 'none'; });
+            menuLinks.forEach(link => link.classList.remove('active'));
+            autoKaleidoscope.stop(); 
+            interactiveKaleidoscopeLab.stop(); 
+            
+            document.body.classList.remove('simulation-active', 'lab-active');
+            document.body.style.overflow = 'visible'; 
+
+            if (pageFooter) pageFooter.style.display = 'none'; 
+            if (homePageTitle) homePageTitle.style.display = 'none'; 
+            if (topMenuNav) topMenuNav.style.display = 'flex';
+
+
+            const targetViewLink = document.querySelector(`nav.top-menu li a[data-target="${targetId}"]`);
+            if (targetViewLink) targetViewLink.classList.add('active');
+
+            if (targetId === 'simulationContainer') {
+                if (homePageTitle) homePageTitle.style.display = 'block'; 
+                document.body.classList.add('simulation-active'); 
+                document.body.style.overflow = 'hidden'; 
+                views.simulationContainer.style.display = 'flex';
+                autoKaleidoscope.start(true); 
+            } else {
+                const sectionToShow = views[targetId];
+                if (sectionToShow) {
+                    sectionToShow.style.display = 'block';
+                    document.body.style.overflow = 'auto'; 
+                    
+                    if (targetId === 'argomento3') { 
+                        interactiveKaleidoscopeLab.start(); 
+                    }
+                    if (targetId === 'argomento4') { 
+                        if (pageFooter) pageFooter.style.display = 'block';
+                    }
+                }
+            }
+        }
+        
+        menuLinks.forEach(link => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                const targetId = link.getAttribute('data-target');
+                showView(targetId);
+                if (targetId !== 'simulationContainer') {
+                    const sectionElement = document.getElementById(targetId);
+                    if (sectionElement) {
+                        const menuHeight = topMenuNav ? topMenuNav.offsetHeight : 0;
+                        // const titleHeight = pageTitleContainer ? pageTitleContainer.offsetHeight : 0; // Non più usato
+                        const totalOffset = menuHeight; 
+                        const elementPosition = sectionElement.getBoundingClientRect().top + window.pageYOffset;
+                        const scrollToPosition = elementPosition - totalOffset - 15; 
+                        window.scrollTo({ top: Math.max(0, scrollToPosition), behavior: 'smooth' });
+                    }
+                }
+            });
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            autoKaleidoscope.init('kaleidoscopeCanvas'); 
+            showView('simulationContainer'); 
+        });
+    </script>
+</body>
+</html>
