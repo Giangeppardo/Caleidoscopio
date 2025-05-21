@@ -377,11 +377,14 @@
                 margin-bottom: 5px;
             }
 
-            .griglia iframe{
-                height: 200%;
-                width: auto;
-                border:none;
-            }
+            #p5TessellationCanvasContainer { 
+    box-shadow: none !important; 
+    flex-shrink: 0; 
+    width: 100%; 
+    display: flex; 
+    justify-content: center;
+    border: none !important;
+}
 
         }
 
@@ -551,9 +554,9 @@
             <br>
             <br>
             <br>
-            <div style="text-align: center;">
+           
                 <img width="600px" src="tassellazione.png">
-            </div>
+            
 
             <p>La tassellatura può essere regolare e irregolare. Come abbiamo già detto, i soli poligoni con la quale è possibile tassellare regolarmente il piano sono triangolo, quadrato ed esagono, ma si può tassellare il piano anche con due o più poligoni regolari, ottenendo diverse configurazioni.
             </p>
@@ -563,9 +566,11 @@
                 Una tassellatura periodica è una disposizione di figure geometriche (come poligoni) su un piano in modo tale che la disposizione si ripeta regolarmente.
                 Invece, una tassellatura aperiodica è una disposizione di figure che non si ripete in alcun modo regolare, pur essendo ordinata e coesa.
             </p> 
-            <div>
+            <p>
+            <div style="text-align: center;">
             <iframe height="700px" width="900px" src="tassellatura_giusta/index.html"></iframe>
             </div>
+        </p>
 
             
         </section>
