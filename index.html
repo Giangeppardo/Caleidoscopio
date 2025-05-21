@@ -542,8 +542,7 @@
                 <img width="600px" src="simmetriaRadiale.png" alt="Simmetria radiale">
             </div>
             
-            <p>Esse hanno offerto a <a href="https://it.wikipedia.org/wiki/Harold_Coxeter">Coxeter</a>, uno dei più noti matematici del XX secolo, lo spunto per nuove ricerche legate a spazi n-dimensionali che lo hanno portato alla classificazione dei <a href="https://it.wikipedia.org/wiki/Politopo">politopi</a>, che sono gli equivalenti dei poliedri nelle dimensioni superiori alla terza, che possono essere costruiti matematicamente ma solo immaginati nel mondo reale. Coxeter fu interessato dalle simmetrie prodotte dal caleidoscopio e da qui ne derivò lo studio sui gruppi di simmetrie, chiamati <a href="https://it.wikipedia.org/wiki/Gruppo_di_Coxeter">Gruppi di Coxeter</a>.</p>
-            <p>I gruppi di Coxeter sono strutture algebriche che descrivono le simmetrie generate da riflessioni. In termini semplici, un gruppo di Coxeter è un insieme di trasformazioni (come riflessioni, rotazioni, ecc.) che possono essere composte tra loro. In pratica, i gruppi di Coxeter danno un linguaggio matematico preciso per studiare strutture geometriche simmetriche, spesso in modo molto visuale tramite diagrammi di Coxeter.</p>
+            
         </section>
 
         <section id="argomentoTassellatura" class="content-section">
@@ -583,10 +582,36 @@
         </section>
         
         <section id="argomento3" class="content-section">
-            <h2>Laboratorio Caleidoscopio (Disegno Libero)</h2> 
-            <p>Disegna sul canvas sottostante. Modifica il numero di "spicchi" (riflessioni), il colore e lo spessore del tratto per vedere come cambiano i pattern caleidoscopici. Premi SPAZIO per pulire il disegno.</p>
-            <div id="p5LabContainer"> 
-                <div id="controls-container-p5">
+            <h2>La matematica del caleidoscopio</h2> 
+            <p>Un modo pratico per creare una figura F con Isom(F) = Dn è il Caleidoscopio: un qualsiasi oggetto posto fra i suoi specchi si riflette più volte creando un'immagine che può essere considerata una figura del piano euclideo. 
+                <br>
+                Con questo laboratorio vedremo come il numero e il tipo di riflessioni dell'oggetto all'interno del caleidoscopio non sono casuali, ma dipendono da regole ben precise. Inoltre potremo notare come, scegliendo particolari angoli, le figure generate dagli specchi avranno come gruppo di simmetria un gruppo diedrale Dn.
+                <br>
+                <br>
+Dn è il gruppo generato da una rotazione ρ2π/n e da una riflessione rl di asse l (), ma come accade per la maggior parte dei gruppi generati, non è indispensabile scegliere proprio questi due elementi. Infatti se θ = 2π/n è l'angolo della rotazione generatrice, sia s la retta per l'origine tale che se ruotiamo s di θ/2 (nel verso positivo degli angoli) intorno all'origine s si sovrappone ad l; allora si ha che: ρθ = rl º rs.
+Di conseguenza si può considerare Dn generato da queste due riflessioni. 
+</p>
+
+<p>
+<strong>Caleidoscopio modello del gruppo diedrale:</strong><br>
+Consideriamo due rette per l'origine l, s, e l'angolo α che esse delimitano, con la condizione che esista n appartenente a N tale che: α = π/n
+</p>
+<div style="text-align: center;">
+<img height="500px" width="500px" src="immagine_assi.png">
+</div>
+
+<p>
+
+Abbiamo appena visto che Dn = < ρ2π/n, rl > = < rl , rs >
+</p>
+
+ <p>
+<br>
+<br>
+ Disegna sul canvas sottostante. Modifica il numero di "spicchi" (riflessioni), il colore e lo spessore del tratto per vedere come cambiano i pattern caleidoscopici. 
+ <br> Premi SPAZIO per pulire il disegno.</p>
+            <div id="p5LabContainer" > 
+    <div id="controls-container-p5">
                     <div class="control-group" id="numSpicchiControl-labMain">
                         <label for="numSpicchiSlider-labMain">Numero sezioni:</label>
                         <div class="slider-container">
@@ -611,7 +636,25 @@
                 </div>
                 <div id="p5CanvasContainer" style="margin-top:15px;"></div>
             </div>
-        </section>
+
+       
+<p style="margin-top: 20px;">
+Ogni oggetto T1 posto fra i due specchi produce 2n-1 immagini visibili ( T2 , ... , T2n ), separate nel disegno attraverso n rette.
+<br>
+Guardando il caleidoscopio dall'alto, l'immagine complessiva appare come un sottoinsieme F di E2 il cui centro di simmetria è posto sull'origine degli assi e si ha che posso ottenere ognuno dei Ti , con i = 1, ... , 2n , come immagine di T1 attraverso uno ed uno solo degli elementi di Dn, ovvero:
+<br>
+∀ i = 1, ... , 2n , ∃ ƒ ∈ Dn ∣ Ti = ƒ(T1)
+<br>
+<br>
+Quindi le simmetrie di F = T1 U T2 U ... U T2n sono: <br>
+	•	n riflessioni date dalle n rette che separano T1 , T2 , ... , T2n.<br>
+	•	la rotazione ρ2α data dalla composizione della riflessione di asse l con quella di asse s, e tutte le rotazioni di angolo multiplo intero di 2α, che danno in totale n rotazioni dal momento che α = π/n.
+Abbiamo quindi che Isom(F) è composto dalle n riflessioni e n rotazioni di Dn , cioè Isom(F) = Dn. 
+
+</p>
+
+    
+</section>
 
         <section id="argomento4" class="content-section">
             <h2>About (Sitografia)</h2>
@@ -797,7 +840,7 @@
                 const allowedSpicchiValues = [2, 4, 6, 8, 10, 12, 18, 20, 24];
                 let currentSpicchiIndex = 2;
                 p.setup = function() {
-                    let canvasWidth = p.min(600, p.windowWidth * 0.9);
+                    let canvasWidth = p.min(500, p.windowWidth * 0.5);
                     let canvasHeight = canvasWidth; 
                     let canvas = p.createCanvas(canvasWidth, canvasHeight); 
                     canvas.parent('p5CanvasContainer'); 
