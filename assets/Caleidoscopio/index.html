@@ -15,20 +15,21 @@
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
         }
-        main { /* p5.js di default crea un <main> per il canvas */
+        main {
             margin-top: 0;
             box-shadow: 0 0 10px rgba(0,0,0,0.2);
         }
         #controls-container {
             margin-bottom: 20px;
             padding: 15px;
-            background-color: #fff;
+            background-color: #333; /* Grigio scuro */
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
             display: flex;
             flex-direction: column;
             gap: 12px;
             width: 580px;
+            color: white; /* Testo bianco */
         }
         .control-group {
             display: flex;
@@ -40,6 +41,7 @@
             font-weight: bold;
             flex-basis: 180px;
             text-align: left;
+            color: white; /* Testo bianco */
         }
         .control-group .slider-container {
             display: flex;
@@ -49,26 +51,36 @@
         }
         .control-group input[type="range"] {
             flex-grow: 1;
-            /* Modifiche per rimuovere il "riquadro" */
-            border: none; /* Rimuove il bordo standard */
-            outline: none; /* Rimuove l'outline al focus */
-            padding: 0; /* Rimuove padding interno */
-            /* Per un reset più completo, potresti decommentare le righe seguenti
-               e poi stilizzare esplicitamente il thumb e la track se necessario.
+            height: 8px;
+            -webkit-appearance: none;
+            background: #555;
+            border-radius: 4px;
+            outline: none;
+        }
+        .control-group input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            background: transparent; 
-            */
+            width: 16px;
+            height: 16px;
+            background: #fff;
+            border-radius: 50%;
+            cursor: pointer;
         }
         .control-group span {
             min-width: 30px;
             text-align: right;
             font-weight: bold;
+            color: white; /* Testo bianco */
         }
         #instructions {
             margin-top: 10px;
             font-style: italic;
-            color: #555;
+            color: #ccc; /* Grigio chiaro */
+        }
+        #colorPickerInput {
+            width: 40px;
+            height: 30px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -126,7 +138,6 @@
           numSpicchiSlider.elt.max = allowedSpicchiValues.length - 1; 
           numSpicchiSlider.elt.value = currentSpicchiIndex; 
           numSpicchiSlider.elt.step = 1;
-          // numSpicchiSlider.style('width', '100%'); // Già gestito da flex-grow nel CSS
 
           numSpicchiDisplay = select('#numSpicchiDisplay');
           numSpicchi = allowedSpicchiValues[currentSpicchiIndex]; 
@@ -143,11 +154,9 @@
           strokeWeightSlider.elt.max = 20;
           strokeWeightSlider.elt.value = currentStrokeWeight;
           strokeWeightSlider.elt.step = 1;
-          // strokeWeightSlider.style('width', '100%'); // Già gestito da flex-grow
 
           strokeWeightDisplay = select('#strokeWeightDisplay');
           strokeWeightDisplay.html(currentStrokeWeight.toString());
-
 
           // Event Listeners
           numSpicchiSlider.input(() => {
@@ -155,7 +164,6 @@
             numSpicchi = allowedSpicchiValues[currentSpicchiIndex];
             numSpicchiDisplay.html(numSpicchi.toString());
             updateBisectorAngleDisplay();
-            baseDrawing.clear();
           });
 
           strokeWeightSlider.input(() => {
@@ -163,7 +171,7 @@
             strokeWeightDisplay.html(currentStrokeWeight.toString());
           });
 
-          background(245);
+          background(0);
         }
 
         function updateBisectorAngleDisplay() {
@@ -176,7 +184,7 @@
         }
 
         function draw() {
-          background(245);
+          background(0);
 
           if (mouseIsPressed && mouseY < height && mouseX < width && mouseX > 0 && mouseY > 0) {
             let currentColorValue = colorPicker.value(); 
@@ -191,10 +199,10 @@
           
           let anglePerSpicchio = 360 / numSpicchi;
 
-          // Disegna le linee bisettrici rosse
+          // Disegna le linee bisettrici bianche
           if (numSpicchi > 0) { 
             push();
-            stroke(255, 0, 0, 100); 
+            stroke(255, 255, 255, 100);
             strokeWeight(1.5); 
             for (let i = 0; i < numSpicchi; i++) {
               let bisectorAngle = (i * anglePerSpicchio) + (anglePerSpicchio / 2);
@@ -225,7 +233,7 @@
         function keyPressed() {
           if (key === ' ') {
             baseDrawing.clear(); 
-            background(245);     
+            background(0);     
           }
         }
     </script>
