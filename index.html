@@ -167,6 +167,16 @@
         #argomento4 a:hover {
             text-decoration: underline;
         }
+        .immagine-container {
+        text-align: center; /* Centra le immagini orizzontalmente nel contenitore */
+        }
+
+        .immagine {
+        display: inline-block; /* Allinea le immagini in linea orizzontalmente */
+        margin: 0 10px; /* Spazio orizzontale tra le immagini */
+        width: 30%; /* Larghezza dell'immagine, ad esempio 30% del contenitore */
+        height: auto; /* Altezza automatica, mantiene il rapporto originale */
+        }
 
         /* Stili per i Laboratori p5.js */
         #p5LabContainer, #p5StellaLab { 
@@ -264,7 +274,7 @@
             background: none; 
             margin-left: 0; 
         }
-        #controls-container-p5 #instructions, #p5StellaLab #instructions-p5 {
+        #controls-container-p5 #instructions, #p5StellaLab #instructions-p5 { /* ID instructions era instructions-labMain */
             margin-top: 5px;
             font-style: italic;
             font-size: 0.9em;
@@ -416,96 +426,7 @@
         <section id="argomento2" class="content-section">
 
             <h2>Le simmetrie</h2> 
-            <p>
-L’immagine del caleidoscopio è originata dalla continua riflessione dei frammenti colorati tra uno specchio e l’altro, moltiplicati in modo apparentemente perfetto. Il processo è quello di una simmetria centrale, e ovviamente il numero delle riflessioni dipende dagli angoli tra gli specchi, che di solito formano un prisma a base triangolare isoscele, riflettente all’interno. Le simmetrie delle forme in movimento del caleidoscopio sono il risultato dell’intersezione dello studio delle riflessioni con quello delle simmetrie centrali, che tante applicazioni hanno prodotto nell’architettura e nelle arti, ma ancora di più nella decorazione degli oggetti.
-<br>
-<br>
-Ma cos’è una simmetria?
-<br>
-<br>
-Il termine simmetria, dal greco συμμετρια è sinonimo di "giusta proporzione" o anche "proprietà geometrica di solidi e di esseri viventi". Nel linguaggio comune, quando si parla di simmetrie si è soliti riferirsi a quella che in matematica viene chiamata "simmetria bilaterale" ovvero una figura è simmetrica se posso dividerla in due parti uguali e speculari.Ma questa concezione è stata generalizzata, dando alla parola simmetria un più ampio significato geometrico, ovvero aggiungendo alla semplice simmetria, diciamo a specchio, tutti i possibili movimenti che riportano una figura in se stessa. È proprio in questi termini che un gruppo di movimenti rigidi descrive esattamente la simmetria di una figura e, viceversa, attraverso una figura posso visualizzare gli elementi di un gruppo di isometrie. <br>
-Il gruppo di simmetrie di una figura è l’insieme dei movimenti, appunto delle simmetrie, che riportano la figura su se stessa, rendendola intera. </p>
-<p>
-<strong> Simmetria: </strong> <br>
-Consideriamo una figura F del piano E2 ed ƒ appartenente a M.<br>
-Se ƒ è tale che ƒ(F) = F (cioè ƒ è un'isometria che riporta la figura in se stessa), allora ƒ si dice simmetria di F.</p>
-<p>
-Gruppo di simmetrie:<br>
-Tutte le simmetrie di F formano un gruppo chiamato gruppo di simmetria di F e denotato con Isom(F): Isom(F) = { ƒ  M | ƒ(F) = F } 
-<br>
-<br>
-Il tipo di gruppo di simmetrie di una figura ci permette di stabilire il tipo della simmetria della figura presa in esame: per spiegare la matematica dietro il caleidoscopio i gruppi di simmetrie presi maggiormente in considerazione sono i gruppi ciclici e i gruppi diedrali.</p>
-<p>
-<strong> Gruppo ciclico:</strong> <br>
-Il gruppo ciclico Cn In matematica, più precisamente nella teoria dei gruppi, un gruppo ciclico è un gruppo che può essere generato da un unico elemento. Un gruppo C è ciclico se esiste un elemento c del gruppo (detto generatore) tale che C è l’insieme delle potenze di c ad esponente intero.
-<br>
-<br>
-Il gruppo ciclico di ordine n :
-<br>
-<br>
-Cn = < ρ2π/n > = { 1, ρθ, ρθ2, ... , ρθn-1}
-<br>
-<br>
-Ogni gruppo di simmetrie ha un proprio dominio fondamentale.<br>
-Il dominio fondamentale di un gruppo di simmetrie corrisponde alla parte minima di una figura F che, presa singolarmente, permette di riprodurre tutti i movimenti Isom(F). Una volta individuato, ricaviamo l’ordine del gruppo (il numero di elementi che il gruppo contiene e quindi ciò che ne definisce la grandezza) contando quante volte il dominio fondamentale si ripete nella figura.
-</p>
-<p>
-<strong> Gruppo Zn:</strong><br>
-Il gruppo Zn è un insieme di classi di resto di modulo n ed è un gruppo di tipo abeliano con l’operazione di somma modulo n. Ogni elemento di Zn e una classe di resto, che rappresenta tutti i numeri interi che forniscono lo stesso resto quando divisi per n.<br>
-L’addizione nel gruppo Zn si fa eseguendo la somma come in Z e poi prendendo il resto della divisione per n.<br>
-Se n = 5, allora Zn è costituito da {0, 1, 2, 3, 4}. L'operazione è la somma modulo 5:
-<br>
-<br>
-2 + 3 = 5, che ridotto modulo 5 diventa 0. Quindi in Zn, 2 + 3 = 0.
-1 + 4 = 5, che ridotto modulo 5 diventa 0. Quindi in Zn, 1 + 4 = 0.
-2 + 2 = 4, quindi in Zn, 2 + 2 = 4.
-<br>
-<br>
-Di conseguenza Zn = {[0] ,[1] , [2] , ... , [n-1]}.</p>
-<p>
-<strong>Isomorfismo tra gruppi:</strong><br>
-Un isomorfismo  tra gruppi è una corrispondenza biunivoca tra gli insiemi sostegno di due gruppi che conserva le uguaglianze riguardanti le operazioni caratterizzanti i due gruppi.
-<br>
-<br>
-Per ogni n ≥ 1 esiste un’isomorfismo di gruppi fra Zn e Cn. Consideriamo ρ2π/n elemento generatore di Cn, i = 0 , 1 , ... , n - 1, e costruiamo la seguente applicazione:
-<br>
-<br>
-ƒ : Cn → Zn = (ρ2π/n)i → [ i ]
-<br>
-<br>
-ƒ è un isomorfismo di gruppi infatti:<br>
-ƒ ( ρ2π/nn o ρ2π/nm) = ƒ ( ρ2π/nn + m) = [n + m] = [n] + [m]= ƒ ( ρ2π/nn ) + ( ρ2π/nm)
-<br>
-<br>
-In termini più semplici questa proposizione mi dice che posso identificare Zn con Cn in quanto hanno lo stesso ordine, ed intercorrono le stesse relazioni fra i generatori e gli elementi dei relativi gruppi.
-Quest'ultima caratteristica deve essere sempre tenuta in considerazione quando si confrontano due gruppi, infatti vedremo in seguito come C4 e D2 non sono isomorfi, pur avendo lo stesso ordine, proprio per il motivo detto. </p>
-<br>
-<br>
-<strong>Gruppo diedrale di ordine 2n: </strong> <br>
-I gruppi diedrali di ordine 2n sono i gruppi di simmetria dei poligoni regolari a n lati. 
-<br>
-<br>
-I gruppi diedrali di ordine 2n sono i gruppi di simmetria dei poligoni regolari a n lati. L'aggettivo diedrale deriva dal termine diedro(dal greco solido a due facce), che a sua volta discende dal fatto di voler considerare un poligono come un solido degenere ad altezza nulla.
-<br>
-<br>
-Osservazione: <br>
-Prima di studiare un gruppo Dn attraverso una figura di cui è gruppo di simmetria, come si è fatto per i gruppi ciclici, è importante osservare la seguente uguaglianza: 
-<br>
-<br>
-ρθ o rl = rt
-<br>
-<br>
-Ovvero una riflessione di asse l composta con una rotazione di angolo θ corrisponde ad un'altra riflessione di un nuovo asse t. Di conseguenza un elemento di Dn del tipo ρθm o rl può anche essere visto come una riflessione data da una nuova retta. Se Dn = Isom(F) per una qualche figura, tali rette sono tutti i suoi possibili assi di simmetria.<br>
-In conclusione Dn è un gruppo formato da n rotazioni e n riflessioni.
-<br>
-<br>
-Dn = < ρ2π/n , rl > = { 1, ρθ, ρθ2, ... , ρθn-1 , rl , ρθ o rl , ρθ2 o rl , ... , ρθn-1 o rl } </p>
-            <br>
-            <br>
-            <div style="text-align: center;">
-
-            <img width="600px" src="simmetriaRadiale.png" alt="Simmetria radiale">
-        </div>
+            <p>L’immagine del caleidoscopio è originata dalla continua riflessione dei frammenti colorati tra uno specchio e l’altro, moltiplicati in modo apparentemente perfetto. Il processo è quello di una simmetria centrale, e ovviamente il numero delle riflessioni dipende dagli angoli tra gli specchi, che di solito formano un prisma a base triangolare isoscele, riflettente all’interno. Le simmetrie delle forme in movimento del caleidoscopio sono il risultato dell’intersezione dello studio delle riflessioni con quello delle simmetrie centrali, che tante applicazioni hanno prodotto nell’architettura e nelle arti, ma ancora di più nella decorazione degli oggetti.</p>
             
             <div id="p5StellaLab">
                 <h4>Laboratorio: Stella con Simmetrie</h4>
@@ -516,6 +437,92 @@ Dn = < ρ2π/n , rl > = { 1, ρθ, ρθ2, ... , ρθn-1 , rl , ρθ o rl , ρθ2
                  <p id="instructions-p5" style="font-style: italic; font-size: 0.9em; color: #aaa; text-align:center; margin-top:5px;">Usa lo slider per cambiare le punte.</p>
             </div>
 
+            <p>Ma cos’è una simmetria?
+            <br>
+            <br>
+            Il termine simmetria, dal greco συμμετρια è sinonimo di "giusta proporzione" o anche "proprietà geometrica di solidi e di esseri viventi". Nel linguaggio comune, quando si parla di simmetrie si è soliti riferirsi a quella che in matematica viene chiamata "simmetria bilaterale" ovvero una figura è simmetrica se posso dividerla in due parti uguali e speculari.Ma questa concezione è stata generalizzata, dando alla parola simmetria un più ampio significato geometrico, ovvero aggiungendo alla semplice simmetria, diciamo a specchio, tutti i possibili movimenti che riportano una figura in se stessa. È proprio in questi termini che un gruppo di movimenti rigidi descrive esattamente la simmetria di una figura e, viceversa, attraverso una figura posso visualizzare gli elementi di un gruppo di isometrie. <br>
+            Il gruppo di simmetrie di una figura è l’insieme dei movimenti, appunto delle simmetrie, che riportano la figura su se stessa, rendendola intera. </p>
+            <p>
+            <strong> Simmetria: </strong> <br>
+            Consideriamo una figura F del piano E2 ed ƒ appartenente a M.<br>
+            Se ƒ è tale che ƒ(F) = F (cioè ƒ è un'isometria che riporta la figura in se stessa), allora ƒ si dice simmetria di F.</p>
+            <p>
+            Gruppo di simmetrie:<br>
+            Tutte le simmetrie di F formano un gruppo chiamato gruppo di simmetria di F e denotato con Isom(F): Isom(F) = { ƒ  M | ƒ(F) = F } 
+            <br>
+            <br>
+            Il tipo di gruppo di simmetrie di una figura ci permette di stabilire il tipo della simmetria della figura presa in esame: per spiegare la matematica dietro il caleidoscopio i gruppi di simmetrie presi maggiormente in considerazione sono i gruppi ciclici e i gruppi diedrali.</p>
+            <p>
+            <strong> Gruppo ciclico:</strong> <br>
+            Il gruppo ciclico Cn In matematica, più precisamente nella teoria dei gruppi, un gruppo ciclico è un gruppo che può essere generato da un unico elemento. Un gruppo C è ciclico se esiste un elemento c del gruppo (detto generatore) tale che C è l’insieme delle potenze di c ad esponente intero.
+            <br>
+            <br>
+            Il gruppo ciclico di ordine n :
+            <br>
+            <br>
+            Cn = < ρ2π/n > = { 1, ρθ, ρθ2, ... , ρθn-1}
+            <br>
+            <br>
+            Ogni gruppo di simmetrie ha un proprio dominio fondamentale.<br>
+            Il dominio fondamentale di un gruppo di simmetrie corrisponde alla parte minima di una figura F che, presa singolarmente, permette di riprodurre tutti i movimenti Isom(F). Una volta individuato, ricaviamo l’ordine del gruppo (il numero di elementi che il gruppo contiene e quindi ciò che ne definisce la grandezza) contando quante volte il dominio fondamentale si ripete nella figura.
+            </p>
+            <p>
+            <strong> Gruppo Zn:</strong><br>
+            Il gruppo Zn è un insieme di classi di resto di modulo n ed è un gruppo di tipo abeliano con l’operazione di somma modulo n. Ogni elemento di Zn e una classe di resto, che rappresenta tutti i numeri interi che forniscono lo stesso resto quando divisi per n.<br>
+            L’addizione nel gruppo Zn si fa eseguendo la somma come in Z e poi prendendo il resto della divisione per n.<br>
+            Se n = 5, allora Zn è costituito da {0, 1, 2, 3, 4}. L'operazione è la somma modulo 5:
+            <br>
+            <br>
+            2 + 3 = 5, che ridotto modulo 5 diventa 0. Quindi in Zn, 2 + 3 = 0.
+            1 + 4 = 5, che ridotto modulo 5 diventa 0. Quindi in Zn, 1 + 4 = 0.
+            2 + 2 = 4, quindi in Zn, 2 + 2 = 4.
+            <br>
+            <br>
+            Di conseguenza Zn = {[0] ,[1] , [2] , ... , [n-1]}.</p>
+            <p>
+            <strong>Isomorfismo tra gruppi:</strong><br>
+            Un isomorfismo  tra gruppi è una corrispondenza biunivoca tra gli insiemi sostegno di due gruppi che conserva le uguaglianze riguardanti le operazioni caratterizzanti i due gruppi.
+            <br>
+            <br>
+            Per ogni n ≥ 1 esiste un’isomorfismo di gruppi fra Zn e Cn. Consideriamo ρ2π/n elemento generatore di Cn, i = 0 , 1 , ... , n - 1, e costruiamo la seguente applicazione:
+            <br>
+            <br>
+            ƒ : Cn → Zn = (ρ2π/n)i → [ i ]
+            <br>
+            <br>
+            ƒ è un isomorfismo di gruppi infatti:<br>
+            ƒ ( ρ2π/nn o ρ2π/nm) = ƒ ( ρ2π/nn + m) = [n + m] = [n] + [m]= ƒ ( ρ2π/nn ) + ( ρ2π/nm)
+            <br>
+            <br>
+            In termini più semplici questa proposizione mi dice che posso identificare Zn con Cn in quanto hanno lo stesso ordine, ed intercorrono le stesse relazioni fra i generatori e gli elementi dei relativi gruppi.
+            Quest'ultima caratteristica deve essere sempre tenuta in considerazione quando si confrontano due gruppi, infatti vedremo in seguito come C4 e D2 non sono isomorfi, pur avendo lo stesso ordine, proprio per il motivo detto. </p>
+            <br>
+            <br>
+            <strong>Gruppo diedrale di ordine 2n: </strong> <br>
+            I gruppi diedrali di ordine 2n sono i gruppi di simmetria dei poligoni regolari a n lati. 
+            <br>
+            <br>
+            I gruppi diedrali di ordine 2n sono i gruppi di simmetria dei poligoni regolari a n lati. L'aggettivo diedrale deriva dal termine diedro(dal greco solido a due facce), che a sua volta discende dal fatto di voler considerare un poligono come un solido degenere ad altezza nulla.
+            <br>
+            <br>
+            Osservazione: <br>
+            Prima di studiare un gruppo Dn attraverso una figura di cui è gruppo di simmetria, come si è fatto per i gruppi ciclici, è importante osservare la seguente uguaglianza: 
+            <br>
+            <br>
+            ρθ o rl = rt
+            <br>
+            <br>
+            Ovvero una riflessione di asse l composta con una rotazione di angolo θ corrisponde ad un'altra riflessione di un nuovo asse t. Di conseguenza un elemento di Dn del tipo ρθm o rl può anche essere visto come una riflessione data da una nuova retta. Se Dn = Isom(F) per una qualche figura, tali rette sono tutti i suoi possibili assi di simmetria.<br>
+            In conclusione Dn è un gruppo formato da n rotazioni e n riflessioni.
+            <br>
+            <br>
+            Dn = < ρ2π/n , rl > = { 1, ρθ, ρθ2, ... , ρθn-1 , rl , ρθ o rl , ρθ2 o rl , ... , ρθn-1 o rl } </p>
+            <br>
+            <br>
+            <div style="text-align: center;">
+                <img width="600px" src="simmetriaRadiale.png" alt="Simmetria radiale">
+            </div>
+            
             <p>Esse hanno offerto a <a href="https://it.wikipedia.org/wiki/Harold_Coxeter">Coxeter</a>, uno dei più noti matematici del XX secolo, lo spunto per nuove ricerche legate a spazi n-dimensionali che lo hanno portato alla classificazione dei <a href="https://it.wikipedia.org/wiki/Politopo">politopi</a>, che sono gli equivalenti dei poliedri nelle dimensioni superiori alla terza, che possono essere costruiti matematicamente ma solo immaginati nel mondo reale. Coxeter fu interessato dalle simmetrie prodotte dal caleidoscopio e da qui ne derivò lo studio sui gruppi di simmetrie, chiamati <a href="https://it.wikipedia.org/wiki/Gruppo_di_Coxeter">Gruppi di Coxeter</a>.</p>
             <p>I gruppi di Coxeter sono strutture algebriche che descrivono le simmetrie generate da riflessioni. In termini semplici, un gruppo di Coxeter è un insieme di trasformazioni (come riflessioni, rotazioni, ecc.) che possono essere composte tra loro. In pratica, i gruppi di Coxeter danno un linguaggio matematico preciso per studiare strutture geometriche simmetriche, spesso in modo molto visuale tramite diagrammi di Coxeter.</p>
         </section>
@@ -818,7 +825,7 @@ Alcuni esempi di poligoni con la quale è possibile tassellare il piano sono tri
                     strokeWeightDisplay = p.select('#strokeWeightDisplay-labMain'); 
                     if(strokeWeightDisplay) strokeWeightDisplay.html(currentStrokeWeight.toString());
                     
-                    p.background(0); // MODIFICATO: Sfondo canvas nero
+                    p.background(0); 
                 };
                 p.windowResized = function() { 
                     let canvasWidth = p.min(600, p.windowWidth * 0.9);
@@ -829,11 +836,11 @@ Alcuni esempi di poligoni con la quale è possibile tassellare il piano sono tri
                         tempDrawing.image(baseDrawing, 0, 0, p.width, p.height); 
                     }
                     baseDrawing = tempDrawing;
-                     p.background(0); // MODIFICATO: Sfondo canvas nero
+                     p.background(0); 
                 };
                 function updateBisectorAngleDisplayP5() { if (numSpicchi > 0) { let angleBetweenBisectors = 360 / numSpicchi; if(bisectorAngleDisplay) bisectorAngleDisplay.html(angleBetweenBisectors.toFixed(1) + "°"); } else { if(bisectorAngleDisplay) bisectorAngleDisplay.html("N/A"); } }
                 p.draw = function() {
-                    p.background(0); // MODIFICATO: Sfondo canvas nero
+                    p.background(0); 
                     if (p.mouseIsPressed && p.mouseY > 0 && p.mouseY < p.height && p.mouseX > 0 && p.mouseX < p.width) { 
                         let currentColorValue;
                         if (colorPicker) {
@@ -841,14 +848,14 @@ Alcuni esempi di poligoni con la quale è possibile tassellare il piano sono tri
                            else currentColorValue = colorPicker.value;
                         } else { currentColorValue = '#E74C3C'; }
                         let p5Col = p.color(currentColorValue);
-                        baseDrawing.stroke(p.red(p5Col), p.green(p5Col), p.blue(p5Col)); // MODIFICATO: Trasparenza rimossa
+                        baseDrawing.stroke(p.red(p5Col), p.green(p5Col), p.blue(p5Col)); 
                         baseDrawing.strokeWeight(currentStrokeWeight); 
                         baseDrawing.line(p.pmouseX, p.pmouseY, p.mouseX, p.mouseY);
                     }
                     p.translate(p.width / 2, p.height / 2); let anglePerSpicchio = 360 / numSpicchi;
                     if (numSpicchi > 0) {
                         p.push(); 
-                        p.stroke(255, 255, 255, 120); // MODIFICATO: Linee spicchi bianche e semi-trasparenti
+                        p.stroke(255, 255, 255, 120); 
                         p.strokeWeight(1); 
                         for (let i = 0; i < numSpicchi; i++) { 
                             let bisectorAngle = (i * anglePerSpicchio) + (anglePerSpicchio / 2); 
@@ -860,10 +867,10 @@ Alcuni esempi di poligoni con la quale è possibile tassellare il piano sono tri
                         for (let i = 0; i < numSpicchi; i++) { p.push(); p.rotate(i * anglePerSpicchio); if (i % 2 === 1) p.scale(1, -1); p.imageMode(p.CENTER); p.image(baseDrawing, 0, 0); p.pop(); }
                     }
                 };
-                p.keyPressed = function() { if (p.key === ' ') { baseDrawing.clear(); p.background(0); }}; // MODIFICATO: Sfondo nero
+                p.keyPressed = function() { if (p.key === ' ') { baseDrawing.clear(); p.background(0); }}; 
             };
             function start() { 
-                if (document.getElementById('p5CanvasContainer')) { // Assicurati che il contenitore esista
+                if (document.getElementById('p5CanvasContainer')) { 
                     if (p5Instance) {p5Instance.remove(); p5Instance = null;}
                     labIsActive = true; 
                     p5Instance = new p5(sketchCode, 'p5CanvasContainer');
@@ -873,9 +880,8 @@ Alcuni esempi di poligoni con la quale è possibile tassellare il piano sono tri
                 labIsActive = false; 
                 if (p5Instance) { 
                     p5Instance.noLoop(); 
-                    p5Instance.remove(); // Rimuove il canvas e i listener
+                    p5Instance.remove(); 
                     p5Instance = null;
-                    // Pulisci anche il contenitore del canvas per evitare duplicati se lo sketch viene riavviato
                     const canvasContainer = document.getElementById('p5CanvasContainer');
                     if (canvasContainer) canvasContainer.innerHTML = '';
                 }
@@ -883,7 +889,7 @@ Alcuni esempi di poligoni con la quale è possibile tassellare il piano sono tri
             return { start, stop };
         })();
         
-        const p5StellaLab = (function() { /* ... (codice lab stella p5.js invariato) ... */
+        const p5StellaLab = (function() { 
             let p5Instance = null;
             let labIsActive = false;
             const sketchCodeStella = function(p) {
