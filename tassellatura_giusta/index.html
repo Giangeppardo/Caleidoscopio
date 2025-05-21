@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tassellazione Esplorativa V3</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #000;
+            overflow: hidden;
+            font-family: Arial, Helvetica, sans-serif, sans-serif;
+            color: #FFFF;
+        }
+        #title-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        #controls {
+            background-color: #696969;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+        canvas {
+            border: 3px solid #34495E;
+            background-color: #ECF0F1; /* Verrà riempito da JS */
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div id="title-container">
+        <h1>Tassellazione</h1>
+        <div id="controls">
+            Forma attuale: <span id="currentShapeDisplay">Quadrato</span><br>
+            <em>Clicca sul canvas per cambiare forma</em>
+        </div>
+    </div>
+    <canvas id="tessellationCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('tessellationCanvas');
+        const ctx = canvas.getContext('2d');
+        const currentShapeDisplay = document.getElementById('currentShapeDisplay');
+
+        const CANVAS_WIDTH = 600;
+        const CANVAS_HEIGHT = 400;
+        canvas.width = CANVAS_WIDTH;
+        canvas.height = CANVAS_HEIGHT;
+
+        const CANVAS_BACKGROUND_FILL = '#BDC3C7';
+
+        const TILE_PARAMS = {
+            square: { size: 30 },
+            hexagon: { radius: 20 },
+            puzzle: { size: 40 }
+            // hexa_puzzle rimosso
+        };
+        
+        const colors = [
+  '#FFFF', // bianco
+  '#0000', // nero
+    ]
+        
+        const ANIMATION_DELAY = 100;
+
+        let clickX = CANVAS_WIDTH / 2;
+        let clickY = CANVAS_HEIGHT / 2;
+        let currentLayer = 0;
+        let animationTimeoutId = null;
+
+        // 'hexa_puzzle' rimosso da shapeTypes
+        const shapeTypes = ['square', 'hexagon', 'puzzle'];
+        let currentShapeIndex = 0;
+        let currentShapeType = shapeTypes[currentShapeIndex];
+        
+        function clearAndFillBackground() {
+            ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+            ctx.fillStyle = CANVAS_BACKGROUND_FILL;
+            ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        }
+
+        function axialToPixel(q, r, radius) {
+            const x = radius * (Math.sqrt(3) * q + Math.sqrt(3)/2 * r) + clickX;
+            const y = radius * (3/2 * r) + clickY;
+            return { x: x, y: y };
+        }
+
+        function drawHexagon(x_center, y_center, size, fillColor) {
+            ctx.beginPath();
+            for (let i = 0; i < 6; i++) {
+                const angle = Math.PI / 3 * i + Math.PI / 6; 
+                const x = x_center + size * Math.cos(angle);
+                const y = y_center + size * Math.sin(angle);
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+            ctx.fillStyle = fillColor;
+            ctx.fill();
+        }
+
+        function drawPuzzlePiece(x_topleft, y_topleft, size, fillColor) {
+            const bumpRadius = size / 3.5;
+            ctx.beginPath();
+            ctx.moveTo(x_topleft, y_topleft);
+            ctx.lineTo(x_topleft + size, y_topleft);
+            ctx.arc(x_topleft + size, y_topleft + size / 2, bumpRadius, -Math.PI / 2, Math.PI / 2, false);
+            ctx.lineTo(x_topleft + size, y_topleft + size);
+            ctx.lineTo(x_topleft, y_topleft + size);
+            ctx.arc(x_topleft, y_topleft + size / 2, bumpRadius, Math.PI / 2, -Math.PI / 2, true);
+            ctx.closePath();
+            ctx.fillStyle = fillColor; ctx.fill();
+        }
+
+        // Funzione drawHexaPuzzlePiece rimossa
+
+        let centerGridCoords = { col: 0, row: 0 };
+
+        canvas.addEventListener('click', (event) => {
+            const rect = canvas.getBoundingClientRect();
+            clickX = event.clientX - rect.left;
+            clickY = event.clientY - rect.top;
+
+            if (animationTimeoutId) {
+                clearTimeout(animationTimeoutId);
+                animationTimeoutId = null;
+            }
+            clearAndFillBackground();
+
+            currentShapeIndex = (currentShapeIndex + 1) % shapeTypes.length;
+            currentShapeType = shapeTypes[currentShapeIndex];
+            updateShapeDisplay();
+            
+            const params = TILE_PARAMS[currentShapeType];
+            if (currentShapeType === 'square' || currentShapeType === 'puzzle') {
+                centerGridCoords.col = Math.floor(clickX / params.size);
+                centerGridCoords.row = Math.floor(clickY / params.size);
+            }
+            currentLayer = 0;
+            drawNextLayer();
+        });
+        
+        function drawNextLayer() {
+            let tilesDrawnInThisLayer = 0;
+            let continueAnimation = true;
+            const params = TILE_PARAMS[currentShapeType];
+
+            if (currentShapeType === 'square' || currentShapeType === 'puzzle') {
+                tilesDrawnInThisLayer = drawSquareOrPuzzleLayer(params.size);
+            } else if (currentShapeType === 'hexagon') { // Modificato per gestire solo 'hexagon'
+                tilesDrawnInThisLayer = drawHexagonLayer(params.radius); // Rinominata per chiarezza
+            }
+
+            const approxLayerRadius = currentLayer * (params.size || params.radius);
+            if (currentLayer > 1 && tilesDrawnInThisLayer === 0 && approxLayerRadius > Math.min(CANVAS_WIDTH, CANVAS_HEIGHT) * 0.8) {
+                 continueAnimation = false;
+            }
+            if (approxLayerRadius > Math.max(CANVAS_WIDTH, CANVAS_HEIGHT) * 1.2 && currentLayer > 3) { 
+                continueAnimation = false;
+            }
+
+            if (continueAnimation) {
+                currentLayer++;
+                animationTimeoutId = setTimeout(() => {
+                    requestAnimationFrame(drawNextLayer);
+                }, ANIMATION_DELAY);
+            } else {
+                if (animationTimeoutId) clearTimeout(animationTimeoutId);
+                animationTimeoutId = null;
+            }
+        }
+        
+        function drawSquareOrPuzzleLayer(size) {
+            let count = 0;
+            for (let dc = -currentLayer; dc <= currentLayer; dc++) {
+                for (let dr = -currentLayer; dr <= currentLayer; dr++) {
+                    if (Math.max(Math.abs(dc), Math.abs(dr)) === currentLayer) {
+                        const logicalCol = centerGridCoords.col + dc;
+                        const logicalRow = centerGridCoords.row + dr;
+                        const drawX = logicalCol * size;
+                        const drawY = logicalRow * size;
+
+                        if (drawX < CANVAS_WIDTH && drawX + size > 0 &&
+                            drawY < CANVAS_HEIGHT && drawY + size > 0) {
+                            const colorBase = Math.abs(logicalCol) + Math.abs(logicalRow);
+                            const fillColor = colors[colorBase % colors.length];
+                            
+                            if (currentShapeType === 'square') {
+                                ctx.fillStyle = fillColor;
+                                ctx.fillRect(drawX, drawY, size, size);
+                            } else { 
+                                drawPuzzlePiece(drawX, drawY, size, fillColor);
+                            }
+                            count++;
+                        }
+                    }
+                }
+            }
+            return count;
+        }
+        
+        // Rinominata da drawHexagonBasedLayer a drawHexagonLayer
+        function drawHexagonLayer(radius) { 
+            let count = 0;
+            for (let dq = -currentLayer; dq <= currentLayer; dq++) {
+                for (let dr = Math.max(-currentLayer, -dq - currentLayer); dr <= Math.min(currentLayer, -dq + currentLayer); dr++) {
+                    const ds = -dq - dr;
+                    if (Math.max(Math.abs(dq), Math.abs(dr), Math.abs(ds)) === currentLayer) {
+                        const pixel = axialToPixel(dq, dr, radius);
+                        const hexBoundingWidth = Math.sqrt(3) * radius;
+                        const hexBoundingHeight = 2 * radius;
+                        if (pixel.x + hexBoundingWidth/2 > 0 && pixel.x - hexBoundingWidth/2 < CANVAS_WIDTH &&
+                            pixel.y + hexBoundingHeight/2 > 0 && pixel.y - hexBoundingHeight/2 < CANVAS_HEIGHT) {
+                            const colorBase = Math.abs(dq) + Math.abs(dr);
+                            const fillColor = colors[colorBase % colors.length];
+                            // Ora chiama direttamente drawHexagon poiché è l'unica opzione qui
+                            drawHexagon(pixel.x, pixel.y, radius, fillColor);
+                            count++;
+                        }
+                    }
+                }
+            }
+            return count;
+        }
+        
+        function updateShapeDisplay() {
+            let shapeName = currentShapeType.charAt(0).toUpperCase() + currentShapeType.slice(1);
+            shapeName = shapeName.replace("_", " ");
+            currentShapeDisplay.textContent = shapeName;
+        }
+
+        window.addEventListener('resize', () => {
+            if (animationTimeoutId) {
+                clearTimeout(animationTimeoutId);
+                animationTimeoutId = null;
+            }
+            clearAndFillBackground();
+            updateShapeDisplay();
+        });
+
+        function start() {
+            clearAndFillBackground();
+            updateShapeDisplay();
+            const params = TILE_PARAMS[currentShapeType];
+            if (currentShapeType === 'square' || currentShapeType === 'puzzle') {
+                centerGridCoords.col = Math.floor(clickX / params.size);
+                centerGridCoords.row = Math.floor(clickY / params.size);
+            }
+            currentLayer = 0;
+            drawNextLayer();
+        }
+        start();
+
+    </script>
+</body>
+</html>
