@@ -34,6 +34,17 @@
             overflow-y: auto;  
         }
 
+        .immagine-container {
+        text-align: center; 
+        }
+
+        .immagine {
+        display: inline-block; 
+        margin: 0 10px; 
+        width: 30%; 
+        height: auto; 
+        }
+
 
         nav.top-menu {
             background-color: rgba(10, 10, 10, 0.85); 
@@ -167,19 +178,20 @@
         #argomento4 a:hover {
             text-decoration: underline;
         }
-        .immagine-container {
-        text-align: center; /* Centra le immagini orizzontalmente nel contenitore */
+        
+        /* Stile per l'iframe nella sezione tassellatura */
+        #argomentoTassellatura iframe {
+            border: none; /* Rimuove il bordo */
+            width: 100%; /* Occupa la larghezza del contenitore .content-section */
+            max-width: 900px; /* Mantiene la tua larghezza massima specificata */
+            height: 700px; /* Mantiene la tua altezza specificata */
+            display: block; /* Per gestire margini e centratura */
+            margin: 20px auto; /* Centra l'iframe se il contenitore è più largo */
         }
 
-        .immagine {
-        display: inline-block; /* Allinea le immagini in linea orizzontalmente */
-        margin: 0 10px; /* Spazio orizzontale tra le immagini */
-        width: 30%; /* Larghezza dell'immagine, ad esempio 30% del contenitore */
-        height: auto; /* Altezza automatica, mantiene il rapporto originale */
-        }
 
         /* Stili per i Laboratori p5.js */
-        #p5LabContainer, #p5StellaLab, #p5TessellationLabContainer { 
+        #p5LabContainer, #p5StellaLab { 
             display: flex;
             flex-direction: column; 
             align-items: center; 
@@ -192,7 +204,7 @@
             border-radius: 8px;
             margin-bottom: 20px;
         }
-        #p5StellaLab, #p5TessellationLabContainer { 
+        #p5StellaLab { 
              background-color: transparent; 
              padding: 0; 
              border-radius: 0;
@@ -201,14 +213,14 @@
              margin-bottom: 25px; 
         }
 
-        #p5CanvasContainer, #p5StellaCanvasContainer, #p5TessellationCanvasContainer { 
+        #p5CanvasContainer, #p5StellaCanvasContainer { 
             box-shadow: 0 0 10px rgba(255,255,255,0.1); 
             flex-shrink: 0; 
             width: 100%; 
             display: flex; 
             justify-content: center;
         }
-        #p5CanvasContainer canvas, #p5StellaCanvasContainer canvas, #p5TessellationCanvasContainer canvas {
+        #p5CanvasContainer canvas, #p5StellaCanvasContainer canvas {
             max-width: 100%; 
             height: auto !important; 
         }
@@ -318,6 +330,10 @@
             .immagine { 
                  max-width: 150px;
             }
+            #argomentoTassellatura iframe { /* Rendi l'iframe più piccolo su mobile */
+                height: 400px;
+                max-width: 90%;
+            }
         }
 
         @media (min-width: 600px) { 
@@ -376,16 +392,9 @@
             #p5StellaControlsContainer p {
                 margin-bottom: 5px;
             }
-
-            #p5TessellationCanvasContainer { 
-    box-shadow: none !important; 
-    flex-shrink: 0; 
-    width: 100%; 
-    display: flex; 
-    justify-content: center;
-    border: none !important;
-}
-
+            #argomentoTassellatura iframe {
+                height: 300px;
+            }
         }
 
     </style>
@@ -435,7 +444,7 @@
         </section>
         <section id="argomento2" class="content-section">
 
-            <h2>Le simmetrie</h2> 
+            <h3>Le simmetrie</h3> 
             <p>L’immagine del caleidoscopio è originata dalla continua riflessione dei frammenti colorati tra uno specchio e l’altro, moltiplicati in modo apparentemente perfetto. Il processo è quello di una simmetria centrale, e ovviamente il numero delle riflessioni dipende dagli angoli tra gli specchi, che di solito formano un prisma a base triangolare isoscele, riflettente all’interno. Le simmetrie delle forme in movimento del caleidoscopio sono il risultato dell’intersezione dello studio delle riflessioni con quello delle simmetrie centrali, che tante applicazioni hanno prodotto nell’architettura e nelle arti, ma ancora di più nella decorazione degli oggetti.</p>
             
             <div id="p5StellaLab">
@@ -539,40 +548,38 @@
 
         <section id="argomentoTassellatura" class="content-section">
             <h2>Tassellatura e Caleidoscopi</h2>
-            <p>
-                Parlando di riflessioni e simmetrie, un elemento fondamentale del principio del caleidoscopio è quello della tassellatura, ossia coprire un intero piano ripetendo una sola figura senza alcuna sovrapposizione e nessuno spazio bianco.
-            </p>
-            <p> 
-                Tali figure geometriche, (dette appunto "tasselli"), sono spesso poligoni, regolari o non, che possono anche avere lati curvilinei.
-            </p>
-            <p> Ci si può rendere conto che non tutti i poligoni regolari tassellano il piano. Infatti, non è possibile tassellare con pentagoni, perché l’angolo di un pentagono regolare non è un sottomultiplo di 360°, condizione necessaria, per non lasciare lacune nell’intorno dei vertici.
+        <p>
+            Parlando di riflessioni e simmetrie, un elemento fondamentale del principio del caleidoscopio è quello della tassellatura, ossia coprire un intero piano ripetendo una sola figura senza alcuna sovrapposizione e nessuno spazio bianco.
+        </p>
+        <p> 
+            Tali figure geometriche, (dette appunto "tasselli"), sono spesso poligoni, regolari o non, che possono anche avere lati curvilinei.
+        </p>
+        <p> Ci si può rendere conto che non tutti i poligoni regolari tassellano il piano. Infatti, non è possibile tassellare con pentagoni, perché l’angolo di un pentagono regolare non è un sottomultiplo di 360°, condizione necessaria, per non lasciare lacune nell’intorno dei vertici.
 
                 Alcuni esempi di poligoni con la quale è possibile tassellare il piano sono triangolo, quadrato ed esagono, mentre con un pentagono è impossibile eseguire la tassellazione poiché la somma dei suoi angoli da come risultato 108°. 
-            </p>
-
-
-            <br>
-            <br>
-            <br>
-           
-                <img width="600px" src="tassellazione.png">
-            
-
-            <p>La tassellatura può essere regolare e irregolare. Come abbiamo già detto, i soli poligoni con la quale è possibile tassellare regolarmente il piano sono triangolo, quadrato ed esagono, ma si può tassellare il piano anche con due o più poligoni regolari, ottenendo diverse configurazioni.
-            </p>
-            <p> 
-                Esistono tassellature periodiche e aperiodiche.
-                <br>   
-                Una tassellatura periodica è una disposizione di figure geometriche (come poligoni) su un piano in modo tale che la disposizione si ripeta regolarmente.
-                Invece, una tassellatura aperiodica è una disposizione di figure che non si ripete in alcun modo regolare, pur essendo ordinata e coesa.
-            </p> 
-            <p>
-            <div style="text-align: center;">
-            <iframe height="700px" width="900px" src="tassellatura_giusta/index.html"></iframe>
-            </div>
         </p>
 
+
+            <br>
+            <br>
+            <br>
+            <div style="text-align: center;">
+            <img width="600px" src="tassellazione.png">
+        </div>
+        <br>
+        <p>La tassellatura può essere regolare e irregolare. Come abbiamo già detto, i soli poligoni con la quale è possibile tassellare regolarmente il piano sono triangolo, quadrato ed esagono, ma si può tassellare il piano anche con due o più poligoni regolari, ottenendo diverse configurazioni.
+        </p>
+        <p> 
+        Esistono tassellature periodiche e aperiodiche.
+        <br>   
+        Una tassellatura periodica è una disposizione di figure geometriche (come poligoni) su un piano in modo tale che la disposizione si ripeta regolarmente.
+            Invece, una tassellatura aperiodica è una disposizione di figure che non si ripete in alcun modo regolare, pur essendo ordinata e coesa.
+        </p> 
+        <div style="text-align: center; margin-top: 20px;">
+            <iframe class="tassellazione-iframe" height="700px" width="900px" src="tassellatura_giusta/index.html"></iframe>
+        </div>
             
+       
         </section>
         
         <section id="argomento3" class="content-section">
@@ -780,7 +787,7 @@
             return { init, start, stop };
         })();
 
-        const interactiveKaleidoscopeLab = (function() { 
+        const interactiveKaleidoscopeLab = (function() { /* Lab p5.js principale, per argomento3 */
             let p5Instance = null; 
             let labIsActive = false;
             const sketchCode = function(p) { 
@@ -824,7 +831,7 @@
                     if (colorPicker) {
                         if (typeof colorPicker.value === 'function') colorPicker.value('#E74C3C');
                         else if (colorPicker.elt) colorPicker.elt.value = '#E74C3C';
-                        else colorPicker.value = '#E74C3C'; // Fallback
+                        else colorPicker.value = '#E74C3C'; 
                     }
 
 
@@ -995,154 +1002,6 @@
             return { start, stop };
         })();
 
-        const p5TessellationLab = (function() {
-            let p5Instance = null;
-            let labIsActive = false;
-            const sketchCodeTessellation = function(p) {
-                let currentShapeType = 0; // 0: square, 1: hexagon, 2: puzzle
-                const shapeTypes = ['square', 'hexagon', 'puzzle'];
-                
-                p.setup = function() {
-                    let canvasSize = p.min(500, p.windowWidth * 0.9);
-                    let tessellationCanvas = p.createCanvas(canvasSize, canvasSize);
-                    tessellationCanvas.parent('p5TessellationCanvasContainer');
-                    tessellationCanvas.mousePressed(cycleShape);
-                    p.angleMode(p.DEGREES);
-                    drawCurrentTessellation();
-                };
-
-                p.windowResized = function() {
-                    let canvasSize = p.min(500, p.windowWidth * 0.9);
-                    p.resizeCanvas(canvasSize, canvasSize);
-                    drawCurrentTessellation();
-                };
-
-                function cycleShape() {
-                    currentShapeType = (currentShapeType + 1) % shapeTypes.length;
-                    drawCurrentTessellation();
-                }
-
-                function drawCurrentTessellation() {
-                    p.background(20); 
-                    switch (shapeTypes[currentShapeType]) {
-                        case 'square':
-                            drawSquareTessellation();
-                            break;
-                        case 'hexagon':
-                            drawHexagonTessellation();
-                            break;
-                        case 'puzzle':
-                            drawPuzzleTessellation();
-                            break;
-                    }
-                }
-
-                function drawSquareTessellation() {
-                    let tileSize = 50;
-                    p.strokeWeight(1);
-                    p.stroke(150);
-                    p.fill(100, 100, 180);
-                    for (let x = 0; x < p.width; x += tileSize) {
-                        for (let y = 0; y < p.height; y += tileSize) {
-                            p.rect(x, y, tileSize, tileSize);
-                        }
-                    }
-                }
-                
-                function drawHexagonTessellation() {
-                    let sideLength = 30;
-                    p.strokeWeight(1);
-                    p.stroke(150);
-                    p.fill(180, 100, 100);
-
-                    let hexHeightOverall = sideLength * p.sqrt(3); // Full height of a flat-topped hexagon
-                    
-                    for (let y = 0, row = 0; y - hexHeightOverall/2 < p.height; y += hexHeightOverall / 2, row++) {
-                        for (let x = 0, col = 0; x - sideLength < p.width; x += sideLength * 1.5, col++) {
-                            let xPos = x;
-                            if (row % 2 !== 0) { // Offset every other row
-                                xPos += sideLength * 0.75;
-                            }
-                            if (xPos - sideLength < p.width && y - hexHeightOverall/2 < p.height) {
-                                drawFlatTopHexagon(xPos, y, sideLength);
-                            }
-                        }
-                    }
-                }
-
-                function drawFlatTopHexagon(centerX, centerY, side) {
-                    p.push();
-                    p.translate(centerX, centerY);
-                    p.beginShape();
-                    for (let i = 0; i < 6; i++) {
-                        p.vertex(side * p.cos(30 + i * 60), side * p.sin(30 + i * 60));
-                    }
-                    p.endShape(p.CLOSE);
-                    p.pop();
-                }
-
-                function drawPuzzleTessellation() {
-                    let tileSize = 60;
-                    p.strokeWeight(1);
-                    p.stroke(150);
-                    let colors = [p.color(100, 180, 100), p.color(120, 200, 120)];
-                    let colorIndex = 0;
-
-                    for (let y = 0; y < p.height; y += tileSize) {
-                        for (let x = 0; x < p.width; x += tileSize) {
-                            p.fill(colors[colorIndex % colors.length]);
-                            drawPuzzlePiece(x, y, tileSize);
-                            colorIndex++;
-                        }
-                        if ( (p.floor(p.width / tileSize)) % 2 === 0) { 
-                             colorIndex++;
-                        }
-                    }
-                }
-
-                function drawPuzzlePiece(x, y, size) {
-                    p.push();
-                    p.translate(x, y);
-                    p.beginShape();
-                    // Top edge
-                    p.vertex(0, 0);
-                    p.vertex(size, 0);
-                    // Right edge with protrusion
-                    p.vertex(size, size * 0.25);
-                    p.arc(size, size * 0.5, size * 0.5, size * 0.5, -90, 90);
-                    p.vertex(size, size);
-                    // Bottom edge
-                    p.vertex(0, size);
-                    // Left edge with indent
-                    p.vertex(0, size * 0.75);
-                    p.arc(0, size * 0.5, size * 0.5, size * 0.5, 90, 270);
-                    p.vertex(0, 0); // Close shape properly
-                    p.endShape(p.CLOSE);
-                    p.pop();
-                }
-            };
-
-            function start() {
-                if (document.getElementById('p5TessellationCanvasContainer')) {
-                    if (p5Instance) { p5Instance.remove(); p5Instance = null; }
-                    labIsActive = true;
-                    p5Instance = new p5(sketchCodeTessellation); // Pass only sketch, p5 will find container
-                }
-            }
-
-            function stop() {
-                labIsActive = false;
-                if (p5Instance) {
-                    p5Instance.noLoop();
-                    p5Instance.remove();
-                    p5Instance = null;
-                    const canvasContainer = document.getElementById('p5TessellationCanvasContainer');
-                    if (canvasContainer) canvasContainer.innerHTML = '';
-                }
-            }
-            return { start, stop };
-        })();
-
         const menuLinks = document.querySelectorAll('nav.top-menu li a');
         const views = {
             simulationContainer: document.getElementById('simulationContainer'),
@@ -1160,7 +1019,6 @@
             autoKaleidoscope.stop(); 
             interactiveKaleidoscopeLab.stop(); 
             p5StellaLab.stop(); 
-            p5TessellationLab.stop(); // Stop tessellation lab
             
             document.body.classList.remove('simulation-fullscreen'); 
             document.body.style.overflow = 'visible'; 
@@ -1194,11 +1052,7 @@
                     } else if (targetId === 'argomento3') { 
                         document.body.style.overflow = 'auto'; 
                         interactiveKaleidoscopeLab.start(); 
-                    } else if (targetId === 'argomentoTassellatura') {
-                        document.body.style.overflow = 'auto';
-                        p5TessellationLab.start(); // Start tessellation lab
                     }
-
 
                     if (targetId === 'argomento4') { 
                         if (pageFooter) pageFooter.style.display = 'block';
