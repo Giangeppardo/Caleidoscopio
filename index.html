@@ -3,13 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Caleidoscopio</title>
+    <title>Caleidoscopio Interattivo - p5.js Lab</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/lib/addons/p5.dom.min.js"></script>
     <style>
         html, body {
             height: 100%; 
             margin: 0;
+            box-sizing: border-box; 
+        }
+        *, *:before, *:after { 
+            box-sizing: inherit;
         }
 
         body {
@@ -28,17 +32,6 @@
         }
         .main-content-area { 
             overflow-y: auto;  
-        }
-
-        .immagine-container {
-        text-align: center; /* Centra le immagini orizzontalmente nel contenitore */
-        }
-
-        .immagine {
-        display: inline-block; /* Allinea le immagini in linea orizzontalmente */
-        margin: 0 10px; /* Spazio orizzontale tra le immagini */
-        width: 30%; /* Larghezza dell'immagine, ad esempio 30% del contenitore */
-        height: auto; /* Altezza automatica, mantiene il rapporto originale */
         }
 
 
@@ -93,14 +86,14 @@
         .page-title-container { 
             width: 100%;
             text-align: center;
-            padding: 20px 0 10px 0; 
+            padding: 20px 10px 10px 10px; 
             flex-shrink: 0;
             display: none; 
         }
         .page-title-container h1 {
             color: #FFFFFF; 
             margin: 0;
-            font-size: 2.2em; 
+            font-size: 2.0em; 
         }
 
         .main-content-area {
@@ -122,26 +115,28 @@
 
         #kaleidoscopeCanvas { 
             box-shadow: 0px 0px 20px rgba(200, 200, 200, 0.3);
+            max-width: 100%;
+            height: auto;
         }
         
         #homePageTitle { 
             display: none; 
             text-align: center;
-            padding: 15px 0; 
+            padding: 15px 10px; 
             width: 100%;
             flex-shrink: 0; 
         }
         #homePageTitle h1 {
             color: #FFFFFF;
             margin: 0;
-            font-size: 2.5em; 
+            font-size: 2.2em; 
         }
 
         .content-section {
             display: none; 
-            padding: 25px;
+            padding: 20px; 
             margin: 0 auto 20px auto; 
-            width: 100%; 
+            width: 95%;  
             max-width: 800px; 
             background-color: transparent; 
         }
@@ -150,11 +145,11 @@
             border-bottom: 2px solid #777777; 
             padding-bottom: 10px; 
             margin-top: 20px; 
-            font-size: 1.6em; 
+            font-size: 1.5em; 
         }
-         .content-section h3 { font-size: 1.4em; border-bottom-style: dashed; }
+         .content-section h3 { font-size: 1.3em; border-bottom-style: dashed; }
          .content-section h4 { 
-            font-size: 1.2em; 
+            font-size: 1.1em; 
             border-bottom-style: dotted; 
             margin-top: 15px; 
             margin-bottom: 10px;
@@ -180,9 +175,9 @@
             align-items: center; 
             gap: 15px;
             margin-top: 10px; 
-            width: 100%;
+            width: 95%; 
+            max-width: 700px;
             padding: 10px; 
-            box-sizing: border-box;
             background-color: #111111; 
             border-radius: 8px;
             margin-bottom: 20px;
@@ -199,50 +194,64 @@
         #p5CanvasContainer, #p5StellaCanvasContainer { 
             box-shadow: 0 0 10px rgba(255,255,255,0.1); 
             flex-shrink: 0; 
+            width: 100%; 
+            display: flex; 
+            justify-content: center;
         }
+        #p5CanvasContainer canvas, #p5StellaCanvasContainer canvas {
+            max-width: 100%; 
+            height: auto !important; 
+        }
+
         #controls-container-p5, #p5StellaControlsContainer { 
             padding: 10px; 
             background-color: #1C1C1C; 
             border-radius: 5px;
             display: flex;
-            flex-direction: row; 
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 10px; 
-            width: auto; 
-            min-width: 280px; 
-            max-width: 100%; 
+            flex-direction: column; 
+            align-items: stretch;  
+            gap: 15px; 
+            width: 100%; 
+            max-width: 500px; 
             color: #D0D0D0; 
         }
         #p5StellaControlsContainer { 
             background-color: transparent; 
             box-shadow: none;
-            justify-content: flex-start; 
+            align-items: center; 
         }
+        #p5StellaControlsContainer .control-group {
+            justify-content: center;
+            width: auto; 
+            flex-direction: row; 
+        }
+
 
         #controls-container-p5 .control-group, #p5StellaControlsContainer .control-group {
             display: flex;
-            align-items: center;
-            gap: 8px;
+            flex-direction: column; 
+            align-items: flex-start;
+            gap: 5px; 
         }
         #controls-container-p5 .control-group label, 
         #p5StellaControlsContainer p, 
         #p5StellaControlsContainer span { 
             font-weight: normal; 
-            margin: 0; 
+            margin: 0 0 5px 0; 
             text-align: left;
             color: #D0D0D0;
+            width: 100%; 
         }
         #controls-container-p5 .slider-container, #p5StellaControlsContainer .slider-container { 
             display: flex;
             align-items: center;
             gap: 8px;
             flex-grow: 1;
+            width: 100%; 
         }
         #controls-container-p5 input[type="range"], #p5StellaControlsContainer input[type="range"] {
             flex-grow: 1;
-            min-width: 120px; 
+            min-width: 100px; 
             border: none; outline: none; padding: 0; 
         }
         #controls-container-p5 .control-group span, #p5StellaControlsContainer span.value-display { 
@@ -253,7 +262,7 @@
          #controls-container-p5 input[type="color"], #p5StellaControlsContainer input[type="color"] {
             width: 35px; height: 25px; padding: 0; border: 1px solid #444;
             background: none; 
-            margin-left: 5px; 
+            margin-left: 0; 
         }
         #controls-container-p5 #instructions, #p5StellaLab #instructions-p5 {
             margin-top: 5px;
@@ -262,7 +271,6 @@
             color: #aaa;
             width: 100%; text-align: center;
         }
-        
 
         footer {
             text-align: center; padding: 25px 20px;
@@ -277,6 +285,89 @@
         }
 
         html { scroll-behavior: smooth; }
+
+        /* Media Queries per Responsiveness */
+        @media (max-width: 768px) {
+            body {
+                font-size: 11pt; 
+            }
+            nav.top-menu li a {
+                padding: 14px 8px; 
+                font-size: 9pt;
+            }
+            .page-title-container h1 {
+                font-size: 1.8em;
+            }
+            #homePageTitle h1 {
+                font-size: 2em;
+            }
+            .content-section h2 { font-size: 1.4em; }
+            .content-section h3 { font-size: 1.2em; }
+            .content-section h4 { font-size: 1.0em; }
+            
+            .immagine { 
+                 max-width: 150px;
+            }
+        }
+
+        @media (min-width: 600px) { 
+            #controls-container-p5 { 
+                flex-direction: row;
+                flex-wrap: wrap; 
+                align-items: center;
+                justify-content: space-around; 
+            }
+            #controls-container-p5 .control-group {
+                flex-direction: row; 
+                align-items: center;
+                width: auto; 
+                flex-basis: 45%; 
+            }
+            #controls-container-p5 .control-group label{
+                 margin-bottom: 0;
+                 width: auto; 
+                 margin-right: 5px;
+             }
+             #controls-container-p5 input[type="color"] {
+                margin-left: auto; 
+            }
+            
+            .immagine-container { 
+                justify-content: space-around;
+            }
+            .immagine {
+                 width: 30%; 
+                 margin: 0 5px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav.top-menu li a {
+                padding: 12px 5px;
+                font-size: 8pt;
+            }
+             .page-title-container h1 {
+                font-size: 1.6em;
+            }
+            #homePageTitle h1 {
+                font-size: 1.8em;
+            }
+             .content-section h2 { font-size: 1.3em; }
+             .content-section h3 { font-size: 1.1em; }
+             .content-section h4 { font-size: 1.0em; }
+
+            .immagine { 
+                 max-width: 120px;
+            }
+            #p5StellaControlsContainer .control-group { 
+                 flex-direction: column;
+                 align-items: center;
+            }
+            #p5StellaControlsContainer p {
+                margin-bottom: 5px;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -316,7 +407,7 @@
                 <img src="isoscele.jpg" alt="45°-45°-90°" class="immagine" title="https://en.etudes.ru/etudes/kaleidoscope/">
                 <img src="scaleno.png" alt="30°-60°-90°" class="immagine" title="https://en.etudes.ru/etudes/kaleidoscope/">
               </div>
-            <p>
+            <p style="text-align: center;">
                 Da sinistra a destra: 60°-60°-60°;   45°-45°-90°;   30°-60°-90°
             </p>
 
@@ -334,8 +425,11 @@
             
             <div id="p5StellaLab">
                 <h4>Laboratorio: Stella con Simmetrie</h4>
-                <div id="p5StellaControlsContainer"></div>
-                <div id="p5StellaCanvasContainer" style="margin-top:10px;"></div>
+                <div id="p5StellaControlsContainer">
+                    </div>
+                <div id="p5StellaCanvasContainer" style="margin-top:10px;">
+                    </div>
+                 <p id="instructions-p5" style="font-style: italic; font-size: 0.9em; color: #aaa; text-align:center; margin-top:5px;">Usa lo slider per cambiare le punte.</p>
             </div>
 
             <p>Esse hanno offerto a Coxeter, uno dei più noti matematici del XX secolo, lo spunto per nuove ricerche legate a spazi n-dimensionali che lo hanno portato alla classificazione dei politopi, che sono gli equivalenti dei poliedri nelle dimensioni superiori alla terza, che possono essere costruiti matematicamente ma solo immaginati nel mondo reale. Coxeter fu interessato dalle simmetrie prodotte dal caleidoscopio e da qui ne derivò lo studio sui gruppi di simmetrie, chiamati Gruppi di Coxeter.</p>
@@ -353,15 +447,16 @@
         <p> Ci si può rendere conto che non tutti i poligoni regolari tassellano il piano. Infatti, non è possibile tassellare con pentagoni, perché l’angolo di un pentagono regolare non è un sottomultiplo di 360°, condizione necessaria, per non lasciare lacune nell’intorno dei vertici.
 
 Alcuni esempi di poligoni con la quale è possibile tassellare il piano sono triangolo, quadrato ed esagono, mentre con un pentagono è impossibile eseguire la tassellazione poiché la somma dei suoi angoli da come risultato 108°. 
-
-
         </p>
-            
+
+
+            <br>
+            <br>
             <br>
             <div style="text-align: center;">
             <img width="600px" src="tassellazione.png">
         </div>
-        <br>
+
         <p>La tassellatura può essere regolare e irregolare. Come abbiamo già detto, i soli poligoni con la quale è possibile tassellare regolarmente il piano sono triangolo, quadrato ed esagono, ma si può tassellare il piano anche con due o più poligoni regolari, ottenendo diverse configurazioni.
         </p>
         <p> 
@@ -376,31 +471,30 @@ Alcuni esempi di poligoni con la quale è possibile tassellare il piano sono tri
         
         <section id="argomento3" class="content-section">
             <h2>Laboratorio Caleidoscopio (Disegno Libero)</h2> 
-            <p>Disegna sul canvas sottostante...</p>
+            <p>Disegna sul canvas sottostante. Modifica il numero di "spicchi" (riflessioni), il colore e lo spessore del tratto per vedere come cambiano i pattern caleidoscopici. Premi SPAZIO per pulire il disegno.</p>
             <div id="p5LabContainer"> 
                 <div id="controls-container-p5">
-                    <div class="control-group" id="numSpicchiControl-p5">
-                        <label for="numSpicchiSlider-p5">Numero di spicchi:</label>
+                    <div class="control-group" id="numSpicchiControl-labMain">
+                        <label for="numSpicchiSlider-labMain">Numero di spicchi:</label>
                         <div class="slider-container">
-                            <input type="range" id="numSpicchiSlider-p5"> <span id="numSpicchiDisplay-p5">6</span>
+                            <input type="range" id="numSpicchiSlider-labMain"> <span id="numSpicchiDisplay-labMain">6</span>
                         </div>
                     </div>
-                     <div class="control-group" id="angleDisplayControl-p5">
-                        <label>Angolo tra linee rosse:</label>
-                        <span id="bisectorAngleDisplay-p5">60°</span>
+                     <div class="control-group" id="angleDisplayControl-labMain">
+                        <label>Angolo tra linee bianche:</label> <span id="bisectorAngleDisplay-labMain">60°</span>
                     </div>
-                    <div class="control-group" id="colorPickerControl-p5">
-                        <label for="colorPickerInput-p5">Colore disegno:</label>
-                        <input type="color" id="colorPickerInput-p5"> 
+                    <div class="control-group" id="colorPickerControl-labMain">
+                        <label for="colorPickerInput-labMain">Colore disegno:</label>
+                        <input type="color" id="colorPickerInput-labMain"> 
                     </div>
-                    <div class="control-group" id="strokeWeightControl-p5">
-                        <label for="strokeWeightSlider-p5">Spessore tratto:</label>
+                    <div class="control-group" id="strokeWeightControl-labMain">
+                        <label for="strokeWeightSlider-labMain">Spessore tratto:</label>
                         <div class="slider-container">
-                            <input type="range" id="strokeWeightSlider-p5">
-                            <span id="strokeWeightDisplay-p5">4</span>
+                            <input type="range" id="strokeWeightSlider-labMain">
+                            <span id="strokeWeightDisplay-labMain">4</span>
                         </div>
                     </div>
-                    <div id="instructions-p5"><p><em>Premi SPAZIO per pulire il disegno.</em></p></div>
+                    <div id="instructions-labMain"><p><em>Premi SPAZIO per pulire il disegno.</em></p></div>
                 </div>
                 <div id="p5CanvasContainer" style="margin-top:15px;"></div>
             </div>
@@ -580,66 +674,139 @@ Alcuni esempi di poligoni con la quale è possibile tassellare il piano sono tri
             return { init, start, stop };
         })();
 
-        const interactiveKaleidoscopeLab = (function() { /* Lab p5.js principale, per argomento3 */
+        const interactiveKaleidoscopeLab = (function() { 
             let p5Instance = null; 
             let labIsActive = false;
-            const sketchCode = function(p) { /* ... (codice sketch p5 principale come prima) ... */ 
+            const sketchCode = function(p) { 
                 let baseDrawing; let numSpicchi; let numSpicchiSlider; let numSpicchiDisplay;
                 let bisectorAngleDisplay; let colorPicker; let strokeWeightSlider;
                 let strokeWeightDisplay; let currentStrokeWeight = 4;
                 const allowedSpicchiValues = [2, 4, 6, 8, 10, 12, 18, 20, 24];
                 let currentSpicchiIndex = 2;
                 p.setup = function() {
-                    let canvas = p.createCanvas(600, 600); canvas.parent('p5CanvasContainer'); p.angleMode(p.DEGREES);
-                    baseDrawing = p.createGraphics(p.width, p.height); baseDrawing.clear();
-                    numSpicchiSlider = p.select('#numSpicchiSlider-p5'); numSpicchiSlider.elt.min = 0;
-                    numSpicchiSlider.elt.max = allowedSpicchiValues.length - 1; numSpicchiSlider.elt.value = currentSpicchiIndex;
-                    numSpicchiSlider.elt.step = 1;
-                    numSpicchiDisplay = p.select('#numSpicchiDisplay-p5'); numSpicchi = allowedSpicchiValues[currentSpicchiIndex];
-                    numSpicchiDisplay.html(numSpicchi.toString());
-                    bisectorAngleDisplay = p.select('#bisectorAngleDisplay-p5'); updateBisectorAngleDisplayP5();
-                    colorPicker = p.select('#colorPickerInput-p5');
-                    if (!colorPicker.elt) { colorPicker = document.getElementById('colorPickerInput-p5'); if (colorPicker) colorPicker.value = '#E74C3C';}
-                    else { colorPicker.value('#E74C3C');}
-                    strokeWeightSlider = p.select('#strokeWeightSlider-p5'); strokeWeightSlider.elt.min = 1;
-                    strokeWeightSlider.elt.max = 20; strokeWeightSlider.elt.value = currentStrokeWeight;
-                    strokeWeightSlider.elt.step = 1;
-                    strokeWeightDisplay = p.select('#strokeWeightDisplay-p5'); strokeWeightDisplay.html(currentStrokeWeight.toString());
-                    numSpicchiSlider.input(() => { currentSpicchiIndex = numSpicchiSlider.value(); numSpicchi = allowedSpicchiValues[currentSpicchiIndex]; numSpicchiDisplay.html(numSpicchi.toString()); updateBisectorAngleDisplayP5(); /* baseDrawing.clear(); RIMOSSO */ });
-                    strokeWeightSlider.input(() => { currentStrokeWeight = strokeWeightSlider.value(); strokeWeightDisplay.html(currentStrokeWeight.toString()); });
-                    p.background(245);
+                    let canvasWidth = p.min(600, p.windowWidth * 0.9);
+                    let canvasHeight = canvasWidth; 
+                    let canvas = p.createCanvas(canvasWidth, canvasHeight); 
+                    canvas.parent('p5CanvasContainer'); 
+                    p.angleMode(p.DEGREES);
+
+                    baseDrawing = p.createGraphics(p.width, p.height);
+                    baseDrawing.clear();
+
+                    numSpicchiSlider = p.select('#numSpicchiSlider-labMain'); 
+                    if(numSpicchiSlider && numSpicchiSlider.elt) {
+                        numSpicchiSlider.elt.min = 0;
+                        numSpicchiSlider.elt.max = allowedSpicchiValues.length - 1;
+                        numSpicchiSlider.elt.value = currentSpicchiIndex;
+                        numSpicchiSlider.elt.step = 1;
+                        numSpicchiSlider.input(() => { 
+                            currentSpicchiIndex = numSpicchiSlider.value(); 
+                            numSpicchi = allowedSpicchiValues[currentSpicchiIndex]; 
+                            if(numSpicchiDisplay) numSpicchiDisplay.html(numSpicchi.toString()); 
+                            updateBisectorAngleDisplayP5(); 
+                        });
+                    }
+
+                    numSpicchiDisplay = p.select('#numSpicchiDisplay-labMain'); 
+                    numSpicchi = allowedSpicchiValues[currentSpicchiIndex];
+                    if(numSpicchiDisplay) numSpicchiDisplay.html(numSpicchi.toString());
+
+                    bisectorAngleDisplay = p.select('#bisectorAngleDisplay-labMain'); 
+                    updateBisectorAngleDisplayP5();
+
+                    colorPicker = p.select('#colorPickerInput-labMain'); 
+                    if (colorPicker) {
+                        if (typeof colorPicker.value === 'function') colorPicker.value('#E74C3C');
+                        else if (colorPicker.elt) colorPicker.elt.value = '#E74C3C';
+                        else colorPicker.value = '#E74C3C'; // Fallback
+                    }
+
+
+                    strokeWeightSlider = p.select('#strokeWeightSlider-labMain'); 
+                     if(strokeWeightSlider && strokeWeightSlider.elt) {
+                        strokeWeightSlider.elt.min = 1;
+                        strokeWeightSlider.elt.max = 20;
+                        strokeWeightSlider.elt.value = currentStrokeWeight;
+                        strokeWeightSlider.elt.step = 1;
+                        strokeWeightSlider.input(() => { currentStrokeWeight = strokeWeightSlider.value(); if(strokeWeightDisplay) strokeWeightDisplay.html(currentStrokeWeight.toString()); });
+                    }
+
+                    strokeWeightDisplay = p.select('#strokeWeightDisplay-labMain'); 
+                    if(strokeWeightDisplay) strokeWeightDisplay.html(currentStrokeWeight.toString());
+                    
+                    p.background(0); // MODIFICATO: Sfondo canvas nero
                 };
-                function updateBisectorAngleDisplayP5() { if (numSpicchi > 0) { let angleBetweenBisectors = 360 / numSpicchi; bisectorAngleDisplay.html(angleBetweenBisectors.toFixed(1) + "°"); } else { bisectorAngleDisplay.html("N/A"); } }
+                p.windowResized = function() { 
+                    let canvasWidth = p.min(600, p.windowWidth * 0.9);
+                    let canvasHeight = canvasWidth;
+                    p.resizeCanvas(canvasWidth, canvasHeight);
+                    let tempDrawing = p.createGraphics(p.width, p.height);
+                    if (baseDrawing) { 
+                        tempDrawing.image(baseDrawing, 0, 0, p.width, p.height); 
+                    }
+                    baseDrawing = tempDrawing;
+                     p.background(0); // MODIFICATO: Sfondo canvas nero
+                };
+                function updateBisectorAngleDisplayP5() { if (numSpicchi > 0) { let angleBetweenBisectors = 360 / numSpicchi; if(bisectorAngleDisplay) bisectorAngleDisplay.html(angleBetweenBisectors.toFixed(1) + "°"); } else { if(bisectorAngleDisplay) bisectorAngleDisplay.html("N/A"); } }
                 p.draw = function() {
-                    p.background(245);
-                    if (p.mouseIsPressed && p.mouseY < p.height && p.mouseX < p.width && p.mouseX > 0 && p.mouseY > 0) {
+                    p.background(0); // MODIFICATO: Sfondo canvas nero
+                    if (p.mouseIsPressed && p.mouseY > 0 && p.mouseY < p.height && p.mouseX > 0 && p.mouseX < p.width) { 
                         let currentColorValue;
-                        if (colorPicker.elt) { currentColorValue = colorPicker.value(); } else if (colorPicker) { currentColorValue = colorPicker.value; } else { currentColorValue = '#E74C3C'; }
+                        if (colorPicker) {
+                           if (typeof colorPicker.value === 'function') currentColorValue = colorPicker.value();
+                           else currentColorValue = colorPicker.value;
+                        } else { currentColorValue = '#E74C3C'; }
                         let p5Col = p.color(currentColorValue);
-                        baseDrawing.stroke(p.red(p5Col), p.green(p5Col), p.blue(p5Col), 180); baseDrawing.strokeWeight(currentStrokeWeight); baseDrawing.line(p.pmouseX, p.pmouseY, p.mouseX, p.mouseY);
+                        baseDrawing.stroke(p.red(p5Col), p.green(p5Col), p.blue(p5Col)); // MODIFICATO: Trasparenza rimossa
+                        baseDrawing.strokeWeight(currentStrokeWeight); 
+                        baseDrawing.line(p.pmouseX, p.pmouseY, p.mouseX, p.mouseY);
                     }
                     p.translate(p.width / 2, p.height / 2); let anglePerSpicchio = 360 / numSpicchi;
                     if (numSpicchi > 0) {
-                        p.push(); p.stroke(255, 0, 0, 100); p.strokeWeight(1.5);
-                        for (let i = 0; i < numSpicchi; i++) { let bisectorAngle = (i * anglePerSpicchio) + (anglePerSpicchio / 2); let x2 = p.cos(bisectorAngle) * (p.max(p.width, p.height) / 1.5); let y2 = p.sin(bisectorAngle) * (p.max(p.width, p.height) / 1.5); p.line(0, 0, x2, y2); }
+                        p.push(); 
+                        p.stroke(255, 255, 255, 120); // MODIFICATO: Linee spicchi bianche e semi-trasparenti
+                        p.strokeWeight(1); 
+                        for (let i = 0; i < numSpicchi; i++) { 
+                            let bisectorAngle = (i * anglePerSpicchio) + (anglePerSpicchio / 2); 
+                            let x2 = p.cos(bisectorAngle) * (p.max(p.width, p.height) / 1.5); 
+                            let y2 = p.sin(bisectorAngle) * (p.max(p.width, p.height) / 1.5); 
+                            p.line(0, 0, x2, y2); 
+                        }
                         p.pop();
                         for (let i = 0; i < numSpicchi; i++) { p.push(); p.rotate(i * anglePerSpicchio); if (i % 2 === 1) p.scale(1, -1); p.imageMode(p.CENTER); p.image(baseDrawing, 0, 0); p.pop(); }
                     }
                 };
-                p.keyPressed = function() { if (p.key === ' ') { baseDrawing.clear(); p.background(245); }};
+                p.keyPressed = function() { if (p.key === ' ') { baseDrawing.clear(); p.background(0); }}; // MODIFICATO: Sfondo nero
             };
-            function start() { if (!p5Instance && document.getElementById('p5CanvasContainer')) { labIsActive = true; p5Instance = new p5(sketchCode, 'p5CanvasContainer');} else if (p5Instance) { labIsActive = true; p5Instance.loop();}}
-            function stop() { labIsActive = false; if (p5Instance) { p5Instance.noLoop(); }}
+            function start() { 
+                if (document.getElementById('p5CanvasContainer')) { // Assicurati che il contenitore esista
+                    if (p5Instance) {p5Instance.remove(); p5Instance = null;}
+                    labIsActive = true; 
+                    p5Instance = new p5(sketchCode, 'p5CanvasContainer');
+                }
+            }
+            function stop() { 
+                labIsActive = false; 
+                if (p5Instance) { 
+                    p5Instance.noLoop(); 
+                    p5Instance.remove(); // Rimuove il canvas e i listener
+                    p5Instance = null;
+                    // Pulisci anche il contenitore del canvas per evitare duplicati se lo sketch viene riavviato
+                    const canvasContainer = document.getElementById('p5CanvasContainer');
+                    if (canvasContainer) canvasContainer.innerHTML = '';
+                }
+            }
             return { start, stop };
         })();
         
-        const p5StellaLab = (function() { /* ... (codice lab stella p5.js invariato, con modifica al translate e raggio) ... */
+        const p5StellaLab = (function() { /* ... (codice lab stella p5.js invariato) ... */
             let p5Instance = null;
             let labIsActive = false;
             const sketchCodeStella = function(p) {
                 let sliderStella; 
                 p.setup = function() {
-                    let stellaCanvas = p.createCanvas(600, 600); 
+                    let canvasSize = p.min(400, p.windowWidth * 0.85); 
+                    let stellaCanvas = p.createCanvas(canvasSize, canvasSize); 
                     stellaCanvas.parent('p5StellaCanvasContainer');
                     p.angleMode(p.DEGREES);
                     
@@ -650,17 +817,21 @@ Alcuni esempi di poligoni con la quale è possibile tassellare il piano sono tri
                     labelP.parent(stellaControlsDiv);
                     labelP.style('color', '#D0D0D0'); 
                     labelP.style('margin', '0 5px 0 0');
-                    sliderStella = p.createSlider(3, 60, 5, 1);
+                    sliderStella = p.createSlider(3, 30, 5, 1); 
                     sliderStella.parent(stellaControlsDiv);
-                    sliderStella.style('width', '150px');
+                    sliderStella.style('width', '120px'); 
+                };
+                p.windowResized = function() { 
+                    let canvasSize = p.min(400, p.windowWidth * 0.85);
+                     p.resizeCanvas(canvasSize, canvasSize);
                 };
                 p.draw = function() {
                     p.background(0); 
-                    p.translate(p.width / 2, p.height / 2 - 40); // SPOSTATO PIU' IN ALTO
+                    p.translate(p.width / 2, p.height / 2 - p.height * 0.1); 
 
                     let n = sliderStella.value();
                     let angleStep = 360 / n;
-                    let r = p.min(p.width, p.height) / 2 * 0.7; // RAGGIO STELLA RIDOTTO
+                    let r = p.min(p.width, p.height) / 2 * 0.65; 
                     let innerR = r * 0.5;
                     p.noFill(); 
                     p.stroke(255);    
@@ -680,18 +851,18 @@ Alcuni esempi di poligoni con la quale è possibile tassellare il piano sono tri
                     p.noStroke();
                     p.fill(220); 
                     p.textAlign(p.CENTER, p.TOP); 
-                    p.textSize(16);
-                    let textBlockStartY = r + 30; // AUMENTATO SPAZIO SOTTO LA STELLA
+                    p.textSize(p.max(10, p.width / 30)); 
+                    
+                    let textBlockStartY = r + p.height * 0.05; 
 
                     p.text(n + " punte", 0, textBlockStartY);
-                    p.text("Simmetrie: " + n, 0, textBlockStartY + 25); 
-                    p.text("Angolo tra punte: " + p.nf(angleStep, 1, 1) + "°", 0, textBlockStartY + 50); 
                     p.pop();
+                    
                     p.push();
                     p.stroke(255, 0, 0, 150); 
                     p.noFill();
                     p.strokeWeight(1);
-                    p.arc(0, 0, r / 2.5, r / 2.5, -angleStep / 2, angleStep / 2); 
+                    p.arc(0, 0, r / 3, r / 3, -angleStep / 2, angleStep / 2); 
                     p.pop();
                 };
             };
@@ -724,7 +895,7 @@ Alcuni esempi di poligoni con la quale è possibile tassellare il piano sono tri
             simulationContainer: document.getElementById('simulationContainer'),
             argomento1: document.getElementById('argomento1'),
             argomento2: document.getElementById('argomento2'), 
-            argomentoTassellatura: document.getElementById('argomentoTassellatura'), // NUOVA SEZIONE
+            argomentoTassellatura: document.getElementById('argomentoTassellatura'),
             argomento3: document.getElementById('argomento3'), 
             argomento4: document.getElementById('argomento4')
         };
@@ -743,7 +914,8 @@ Alcuni esempi di poligoni con la quale è possibile tassellare il piano sono tri
             if (pageFooter) pageFooter.style.display = 'none'; 
             if (homePageTitle) homePageTitle.style.display = 'none'; 
             const generalPageTitle = document.querySelector('.page-title-container');
-            if (generalPageTitle) generalPageTitle.style.display = (targetId === 'simulationContainer' ? 'none' : 'block');
+             if (generalPageTitle) generalPageTitle.style.display = (targetId === 'simulationContainer' ? 'none' : 'block');
+
 
             if (topMenuNav) topMenuNav.style.display = 'flex';
 
