@@ -177,12 +177,12 @@
             margin-bottom: 20px;
         }
         #p5StellaLab { 
-             background-color: transparent; /* Rimosso sfondo specifico per Stella Lab */
+             background-color: transparent; 
              padding: 0; 
              border-radius: 0;
              box-shadow: none; 
-             margin-top: 25px; /* Aumentato spazio sopra */
-             margin-bottom: 25px; /* Aumentato spazio sotto */
+             margin-top: 25px; 
+             margin-bottom: 25px; 
         }
 
         #p5CanvasContainer, #p5StellaCanvasContainer { 
@@ -272,7 +272,9 @@
         <ul>
             <li><a data-target="simulationContainer" class="active">Home</a></li>
             <li><a data-target="argomento1">Cos'è?</a></li>
-            <li><a data-target="argomento2">Come Funziona & Simmetrie</a></li> <li><a data-target="argomento3">Laboratorio Disegno</a></li> <li><a data-target="argomento4">About</a></li>
+            <li><a data-target="argomento2">Come Funziona & Simmetrie</a></li> 
+            <li><a data-target="argomento3">Laboratorio Disegno</a></li> 
+            <li><a data-target="argomento4">About</a></li>
         </ul>
     </nav>
     
@@ -295,7 +297,8 @@
             <p>Il principio di funzionamento di un caleidoscopio si basa sulla riflessione multipla della luce. All'interno di un tubo sono posizionati, longitudinalmente, due o più specchi piani. Comunemente, si usano tre specchi disposti a formare un prisma a base triangolare equilatera.</p>
             <p>Ad un'estremità del tubo si trova una camera traslucida contenente piccoli frammenti colorati. La luce che attraversa questi oggetti viene riflessa dagli specchi, creando un pattern simmetrico. Ruotando il tubo, gli oggetti si muovono, generando nuove configurazioni. </p>
             <p>Solitamente il numero di specchi impiegati è tre, i quali vengono disposti a triangolo equilatero, in modo da formare la seguente sequenza di angoli: 60°-60°-60° (ma in realtà sono possibili altre due combinazioni: 45°-45°-90° e 30°-60°-90°). Per costruire il caleidoscopio, è stato necessario stabilire il rapporto che vi era tra il diametro del tubo, e la larghezza degli specchi stessi. Si è quindi studiata la proporzione tra triangolo equilatero e la circonferenza ad esso circoscritta.</p>
-            <h3>Le simmetrie</h3> <p>L’immagine del caleidoscopio è originata dalla continua riflessione dei frammenti colorati tra uno specchio e l’altro, moltiplicati in modo apparentemente perfetto. Il processo è quello di una simmetria centrale, e ovviamente il numero delle riflessioni dipende dagli angoli tra gli specchi, che di solito formano un prisma a base triangolare isoscele, riflettente all’interno. Le simmetrie delle forme in movimento del caleidoscopio sono il risultato dell’intersezione dello studio delle riflessioni con quello delle simmetrie centrali, che tante applicazioni hanno prodotto nell’architettura e nelle arti, ma ancora di più nella decorazione degli oggetti.</p>
+            <h3>Le simmetrie</h3> 
+            <p>L’immagine del caleidoscopio è originata dalla continua riflessione dei frammenti colorati tra uno specchio e l’altro, moltiplicati in modo apparentemente perfetto. Il processo è quello di una simmetria centrale, e ovviamente il numero delle riflessioni dipende dagli angoli tra gli specchi, che di solito formano un prisma a base triangolare isoscele, riflettente all’interno. Le simmetrie delle forme in movimento del caleidoscopio sono il risultato dell’intersezione dello studio delle riflessioni con quello delle simmetrie centrali, che tante applicazioni hanno prodotto nell’architettura e nelle arti, ma ancora di più nella decorazione degli oggetti.</p>
             
             <div id="p5StellaLab">
                 <h4>Laboratorio: Stella con Simmetrie</h4>
@@ -303,7 +306,7 @@
                     </div>
                 <div id="p5StellaCanvasContainer" style="margin-top:10px;">
                     </div>
-                <p id="instructions-p5" style="font-style: italic; font-size: 0.9em; color: #aaa; text-align:center; margin-top:5px;">Usa lo slider per cambiare le punte. Premi SPAZIO per pulire (se implementato nello sketch).</p>
+                <p id="instructions-p5" style="font-style: italic; font-size: 0.9em; color: #aaa; text-align:center; margin-top:5px;">Usa lo slider per cambiare le punte.</p>
             </div>
 
             <p>Esse hanno offerto a Coxeter, uno dei più noti matematici del XX secolo, lo spunto per nuove ricerche legate a spazi n-dimensionali che lo hanno portato alla classificazione dei politopi, che sono gli equivalenti dei poliedri nelle dimensioni superiori alla terza, che possono essere costruiti matematicamente ma solo immaginati nel mondo reale. Coxeter fu interessato dalle simmetrie prodotte dal caleidoscopio e da qui ne derivò lo studio sui gruppi di simmetrie, chiamati Gruppi di Coxeter.</p>
@@ -362,6 +365,7 @@
         const pageFooter = document.querySelector('footer');
         const pageTitleContainer = document.querySelector('.page-title-container');
 
+
         let lastScrollTop = 0;
         const menuHeight = topMenuNav ? topMenuNav.offsetHeight : 60; 
         const scrollThreshold = 20; 
@@ -383,6 +387,7 @@
             }
             lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; 
         }, false);
+
 
         const autoKaleidoscope = (function() { /* ... (codice simulazione automatica invariato) ... */ 
             let canvas, ctx, centerX, centerY;
@@ -516,7 +521,7 @@
         const interactiveKaleidoscopeLab = (function() { /* Lab p5.js principale, per argomento3 */
             let p5Instance = null; 
             let labIsActive = false;
-            const sketchCode = function(p) { /* ... (codice sketch p5 principale come prima) ... */ 
+            const sketchCode = function(p) { 
                 let baseDrawing; let numSpicchi; let numSpicchiSlider; let numSpicchiDisplay;
                 let bisectorAngleDisplay; let colorPicker; let strokeWeightSlider;
                 let strokeWeightDisplay; let currentStrokeWeight = 4;
@@ -538,7 +543,15 @@
                     strokeWeightSlider.elt.max = 20; strokeWeightSlider.elt.value = currentStrokeWeight;
                     strokeWeightSlider.elt.step = 1;
                     strokeWeightDisplay = p.select('#strokeWeightDisplay-p5'); strokeWeightDisplay.html(currentStrokeWeight.toString());
-                    numSpicchiSlider.input(() => { currentSpicchiIndex = numSpicchiSlider.value(); numSpicchi = allowedSpicchiValues[currentSpicchiIndex]; numSpicchiDisplay.html(numSpicchi.toString()); updateBisectorAngleDisplayP5(); baseDrawing.clear(); });
+                    
+                    numSpicchiSlider.input(() => { 
+                        currentSpicchiIndex = numSpicchiSlider.value(); 
+                        numSpicchi = allowedSpicchiValues[currentSpicchiIndex]; 
+                        numSpicchiDisplay.html(numSpicchi.toString()); 
+                        updateBisectorAngleDisplayP5(); 
+                        // baseDrawing.clear(); // MODIFICATO: Non pulire più il disegno
+                    });
+
                     strokeWeightSlider.input(() => { currentStrokeWeight = strokeWeightSlider.value(); strokeWeightDisplay.html(currentStrokeWeight.toString()); });
                     p.background(245);
                 };
@@ -566,41 +579,35 @@
             return { start, stop };
         })();
         
-        const p5StellaLab = (function() {
+        const p5StellaLab = (function() { /* ... (codice lab stella p5.js invariato) ... */
             let p5Instance = null;
             let labIsActive = false;
-
             const sketchCodeStella = function(p) {
                 let sliderStella; 
                 p.setup = function() {
-                    let stellaCanvas = p.createCanvas(600, 600); // Canvas p5 per Stella
+                    let stellaCanvas = p.createCanvas(600, 600); 
                     stellaCanvas.parent('p5StellaCanvasContainer');
                     p.angleMode(p.DEGREES);
                     
                     let stellaControlsDiv = p.select('#p5StellaControlsContainer');
-                    
-                    // Pulisci eventuali controlli vecchi se setup viene chiamato più volte (improbabile con remove())
                     if (stellaControlsDiv) stellaControlsDiv.html(''); 
 
                     let labelP = p.createP("Numero di punte:");
                     labelP.parent(stellaControlsDiv);
                     labelP.style('color', '#D0D0D0'); 
                     labelP.style('margin', '0 5px 0 0');
-
                     sliderStella = p.createSlider(3, 60, 5, 1);
                     sliderStella.parent(stellaControlsDiv);
                     sliderStella.style('width', '150px');
                 };
-
                 p.draw = function() {
-                    p.background(0); // Sfondo nero per questo canvas
-                    p.translate(p.width / 2, p.height / 2 - 40); // MODIFICATO: Sposta tutto un po' più su (-40px)
+                    p.background(0); 
+                    p.translate(p.width / 2, p.height / 2 - 60); // SPOSTATO PIU' IN ALTO
 
                     let n = sliderStella.value();
                     let angleStep = 360 / n;
-                    let r = p.min(p.width, p.height) / 2 * 0.7; // Raggio stella leggermente ridotto
+                    let r = p.min(p.width, p.height) / 2 * 0.65; // RAGGIO STELLA RIDOTTO
                     let innerR = r * 0.5;
-
                     p.noFill(); 
                     p.stroke(255);    
                     p.strokeWeight(1.5);
@@ -615,25 +622,18 @@
                         p.endShape(p.CLOSE);
                         p.pop();
                     }
-                    
-                    p.push(); // Blocco separato per il testo
-                    // Non usiamo resetMatrix per mantenere la traslazione principale, 
-                    // ma disegniamo il testo relativo alla nuova origine (spostata in alto).
+                    p.push();
                     p.noStroke();
                     p.fill(220); 
                     p.textAlign(p.CENTER, p.TOP); 
                     p.textSize(16);
-                    
-                    // Posiziona il testo sotto la stella, tenendo conto dello spostamento verso l'alto.
-                    // La stella è centrata attorno a (0,0) nel sistema traslato. Il suo raggio è 'r'.
-                    let textBlockStartY = r + 30; // Spazio sotto la stella
+                    let textBlockStartY = r + 40; // AUMENTATO SPAZIO SOTTO LA STELLA
 
                     p.text(n + " punte", 0, textBlockStartY);
-                    p.text("Simmetrie: " + n, 0, textBlockStartY + 25);
-                    p.text("Angolo tra punte: " + p.nf(angleStep, 1, 1) + "°", 0, textBlockStartY + 50);
+                    p.text("Simmetrie: " + n, 0, textBlockStartY + 25); // AUMENTATO SPAZIO TRA RIGHE
+                    p.text("Angolo tra punte: " + p.nf(angleStep, 1, 1) + "°", 0, textBlockStartY + 50); // AUMENTATO SPAZIO TRA RIGHE
                     p.pop();
-                    
-                    p.push(); // Blocco per l'arco dell'angolo
+                    p.push();
                     p.stroke(255, 0, 0, 150); 
                     p.noFill();
                     p.strokeWeight(1);
@@ -641,31 +641,20 @@
                     p.pop();
                 };
             };
-
             function start() {
                 if (document.getElementById('p5StellaCanvasContainer')) {
-                    if (p5Instance) { // Se esiste già, rimuovila prima di ricrearla
-                        p5Instance.remove();
-                        p5Instance = null;
-                    }
-                    // Pulisci i controlli HTML prima di ricrearli, se p5 li aggiunge al div
+                    if (p5Instance) { p5Instance.remove(); p5Instance = null; }
                     const controlsContainer = document.getElementById('p5StellaControlsContainer');
                     if (controlsContainer) controlsContainer.innerHTML = '';
-
                     labIsActive = true;
                     p5Instance = new p5(sketchCodeStella, 'p5StellaCanvasContainer');
                 }
             }
             function stop() {
                 labIsActive = false;
-                if (p5Instance) {
-                    p5Instance.noLoop();
-                    // Per una pulizia completa quando si cambia vista, rimuovi l'istanza.
-                    // Questo previene anche che i controlli p5 vengano duplicati.
-                    p5Instance.remove();
-                    p5Instance = null;
+                if (p5Instance) { p5Instance.noLoop(); p5Instance.remove(); p5Instance = null;
                     const controlsContainer = document.getElementById('p5StellaControlsContainer');
-                    if (controlsContainer) controlsContainer.innerHTML = ''; // Pulisci anche i controlli
+                    if (controlsContainer) controlsContainer.innerHTML = '';
                      const canvasContainer = document.getElementById('p5StellaCanvasContainer');
                     if (canvasContainer) canvasContainer.innerHTML = '';
                 }
@@ -690,7 +679,7 @@
             interactiveKaleidoscopeLab.stop(); 
             p5StellaLab.stop(); 
             
-            document.body.classList.remove('simulation-fullscreen'); // Rinomina da simulation-active
+            document.body.classList.remove('simulation-fullscreen'); 
             document.body.style.overflow = 'visible'; 
 
             if (pageFooter) pageFooter.style.display = 'none'; 
@@ -716,10 +705,10 @@
                     document.body.style.overflow = 'auto'; 
                     
                     if (targetId === 'argomento2') { 
-                        document.body.style.overflow = 'auto'; // Permetti lo scroll anche per la sezione con p5StellaLab
+                        document.body.style.overflow = 'auto'; 
                         p5StellaLab.start();
                     } else if (targetId === 'argomento3') { 
-                        document.body.style.overflow = 'auto'; // Assicura che sia scrollabile
+                        document.body.style.overflow = 'auto'; 
                         interactiveKaleidoscopeLab.start(); 
                     }
 
