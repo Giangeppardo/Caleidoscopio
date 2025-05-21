@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Caleidoscopio Interattivo</title>
+    <title>Caleidoscopio Interattivo - p5.js Lab</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
     <style>
         html, body {
@@ -101,15 +101,14 @@
         #homePageTitle {
             display: none; 
             text-align: center;
-            padding: 15px 0; /* Ridotto padding per avvicinarlo al canvas */
+            padding: 15px 0; 
             width: 100%;
             flex-shrink: 0; 
         }
         #homePageTitle h1 {
             color: #FFFFFF;
             margin: 0;
-            font-size: 2.5em; /* MODIFICATO: Ridotta dimensione font (era 2.8em) */
-            /* Rimosso eventuale bordo o box-shadow da qui se presente prima */
+            font-size: 2.5em; 
         }
 
 
@@ -139,16 +138,22 @@
             text-decoration: underline;
         }
 
+        /* Stili per il Laboratorio p5.js */
         #p5LabContainer { 
             display: flex;
-            flex-direction: column;
-            align-items: center; 
-            gap: 15px;
+            flex-direction: row; /* MODIFICATO: per layout orizzontale */
+            align-items: flex-start; /* Allinea in alto */
+            justify-content: center; /* Centra il gruppo canvas+controlli */
+            flex-wrap: wrap; /* Permette ai controlli di andare sotto su schermi piccoli */
+            gap: 20px; /* Aumentato gap tra canvas e controlli */
             margin-top: 10px; 
             width: 100%;
+            padding: 10px; /* Aggiunto padding per non toccare i bordi */
+            box-sizing: border-box;
         }
         #p5CanvasContainer { 
-            box-shadow: 0 0 10px rgba(255,255,255,0.2); 
+            box-shadow: 0 0 10px rgba(255,255,255,0.2);
+            flex-shrink: 0; /* Non far restringere il canvas */
         }
         #controls-container-p5 { 
             padding: 15px;
@@ -158,10 +163,12 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            width: auto; 
-            min-width: 300px; 
-            max-width: 580px; 
+            width: 280px; /* Larghezza fissa per i controlli */
+            min-width: 250px; 
             color: #E0E0E0; 
+            /* margin-top: 0; Rimosso, il gap è gestito da p5LabContainer */
+            /* margin-left: 20px; AGGIUNTO (o gestito da gap) */
+            flex-shrink: 0;
         }
         #controls-container-p5 .control-group {
             display: flex;
@@ -171,7 +178,8 @@
         }
         #controls-container-p5 .control-group label {
             font-weight: normal; 
-            flex-basis: 150px; 
+            flex-basis: auto; /* Rimosso flex-basis fisso, si adatterà */
+            margin-right: 5px; /* Aggiunto per separare da slider */
             text-align: left;
         }
         #controls-container-p5 .slider-container {
@@ -194,6 +202,7 @@
          #controls-container-p5 input[type="color"] {
             width: 40px; height: 30px; padding: 0; border: 1px solid #555;
             background: none; 
+            margin-left: auto; /* Spinge il color picker a destra se c'è spazio */
         }
         #controls-container-p5 #instructions {
             margin-top: 5px;
@@ -228,9 +237,6 @@
         </ul>
     </nav>
     
-    <!-- Il page-title-container generale è stato rimosso dall'HTML, 
-         il titolo "CALEIDOSCOPIO" è ora specifico per la home e si trova dentro #simulationContainer -->
-
     <div class="main-content-area">
         <div id="simulationContainer">
             <canvas id="kaleidoscopeCanvas"></canvas>
@@ -241,25 +247,18 @@
 
         <section id="argomento1" class="content-section">
             <h2>Cos'è un caleidoscopio?</h2>
-            <p>Il caleidoscopio è uno strumento ottico che, attraverso una serie di specchi inclinati, crea una molteplicità di immagini simmetriche a partire da piccoli oggetti colorati posti al suo interno. Il termine deriva dal greco καλός (kalós), "bello", εἶδος (eîdos), "immagine", e σκοπέω (skopéō), "guardare". </p>
-            <p>Inventato da Sir David Brewster nel 1816, il caleidoscopio è diventato rapidamente un giocattolo popolare, ma ha anche trovato applicazioni nell'arte e nel design per la sua capacità di generare pattern complessi e affascinanti.</p>
-            <p>Il caleidoscopio sfrutta il principio della riflessione tra specchi, conosciuto già dall’ottica classica, ma fu inventato come oggetto nel 1816 da David Brewster mentre studiava la polarizzazione della luce. Venne brevettato l’anno successivo. Esso è costituito da tre specchi infilati in un tubo con un buco ad un’estremità e dei vetrini colorati in un doppio fondo dall’altra parte. La costruzione del caleidoscopio venne programmata per il 1817 ma prima che l’oggetto potesse uscire l’idea venne copiata e l’uscita preceduta a Londra e Parigi.</p>
+            <p>Il caleidoscopio è uno strumento ottico...</p>
         </section>
         <section id="argomento2" class="content-section">
             <h2>Come funziona?</h2>
-            <p>Il principio di funzionamento di un caleidoscopio si basa sulla riflessione multipla della luce. All'interno di un tubo sono posizionati, longitudinalmente, due o più specchi piani. Comunemente, si usano tre specchi disposti a formare un prisma a base triangolare equilatera.</p>
-            <p>Ad un'estremità del tubo si trova una camera traslucida contenente piccoli frammenti colorati. La luce che attraversa questi oggetti viene riflessa dagli specchi, creando un pattern simmetrico. Ruotando il tubo, gli oggetti si muovono, generando nuove configurazioni. </p>
-            <p>Solitamente il numero di specchi impiegati è tre, i quali vengono disposti a triangolo equilatero, in modo da formare la seguente sequenza di angoli: 60°-60°-60° (ma in realtà sono possibili altre due combinazioni: 45°-45°-90° e 30°-60°-90°). Per costruire il caleidoscopio, è stato necessario stabilire il rapporto che vi era tra il diametro del tubo, e la larghezza degli specchi stessi. Si è quindi studiata la proporzione tra triangolo equilatero e la circonferenza ad esso circoscritta.</p>
-            <h2>Le simmetrie</h2>
-            <p>L’immagine del caleidoscopio è originata dalla continua riflessione dei frammenti colorati tra uno specchio e l’altro, moltiplicati in modo apparentemente perfetto. Il processo è quello di una simmetria centrale, e ovviamente il numero delle riflessioni dipende dagli angoli tra gli specchi, che di solito formano un prisma a base triangolare isoscele, riflettente all’interno. Le simmetrie delle forme in movimento del caleidoscopio sono il risultato dell’intersezione dello studio delle riflessioni con quello delle simmetrie centrali, che tante applicazioni hanno prodotto nell’architettura e nelle arti, ma ancora di più nella decorazione degli oggetti.</p>
-            <p>Esse hanno offerto a Coxeter, uno dei più noti matematici del XX secolo, lo spunto per nuove ricerche legate a spazi n-dimensionali che lo hanno portato alla classificazione dei politopi, che sono gli equivalenti dei poliedri nelle dimensioni superiori alla terza, che possono essere costruiti matematicamente ma solo immaginati nel mondo reale. Coxeter fu interessato dalle simmetrie prodotte dal caleidoscopio e da qui ne derivò lo studio sui gruppi di simmetrie, chiamati Gruppi di Coxeter.</p>
-            <p>I gruppi di Coxeter sono strutture algebriche che descrivono le simmetrie generate da riflessioni. In termini semplici, un gruppo di Coxeter è un insieme di trasformazioni (come riflessioni, rotazioni, ecc.) che possono essere composte tra loro. In pratica, i gruppi di Coxeter danno un linguaggio matematico preciso per studiare strutture geometriche simmetriche, spesso in modo molto visuale tramite diagrammi di Coxeter.</p>
+            <p>Il principio di funzionamento...</p>
         </section>
         
         <section id="argomento3" class="content-section">
             <h2>Laboratorio Caleidoscopio p5.js</h2>
             <p>Disegna sul canvas sottostante. Modifica il numero di "spicchi" (riflessioni), il colore e lo spessore del tratto per vedere come cambiano i pattern caleidoscopici. Premi SPAZIO per pulire il disegno.</p>
             <div id="p5LabContainer">
+                <div id="p5CanvasContainer"></div> 
                 <div id="controls-container-p5">
                     <div class="control-group" id="numSpicchiControl-p5">
                         <label for="numSpicchiSlider-p5">Numero di spicchi:</label>
@@ -284,7 +283,6 @@
                     </div>
                     <div id="instructions-p5"><p><em>Premi SPAZIO per pulire il disegno.</em></p></div>
                 </div>
-                <div id="p5CanvasContainer" style="margin-top:15px;"></div>
             </div>
              <p style="height: 300px;">Testo aggiuntivo per forzare lo scroll...</p> 
              <p>Altro testo...</p>
@@ -308,11 +306,9 @@
 
     <script>
         const topMenuNav = document.querySelector('nav.top-menu');
-        // const pageTitleContainer = document.querySelector('.page-title-container'); // Rimosso riferimento al contenitore generale del titolo
         const homePageTitle = document.getElementById('homePageTitle'); 
         const pageFooter = document.querySelector('footer');
 
-        // --- Logica per nascondere/mostrare il menu durante lo scroll ---
         let lastScrollTop = 0;
         const menuHeight = topMenuNav ? topMenuNav.offsetHeight : 60; 
         const scrollThreshold = 20; 
@@ -327,9 +323,7 @@
                 }
                 return;
             }
-
             let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
             if (topMenuNav) {
                 if (scrollTop > lastScrollTop && scrollTop > menuHeight + scrollThreshold) {
                     topMenuNav.style.top = `-${menuHeight + 20}px`; 
@@ -339,7 +333,6 @@
             }
             lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; 
         }, false);
-
 
         const autoKaleidoscope = (function() { /* ... (codice simulazione automatica invariato) ... */ 
             let canvas, ctx, centerX, centerY;
@@ -357,7 +350,6 @@
                 if (isTakingFullAvailableSpace) {
                     const currentMenuHeight = (topMenuNav && topMenuNav.style.display !== 'none') ? topMenuNav.offsetHeight : 0;
                     const currentTitleHeight = (homePageTitle && homePageTitle.style.display !== 'none') ? homePageTitle.offsetHeight : 0;
-                    
                     canvas.width = window.innerWidth;
                     canvas.height = window.innerHeight - currentMenuHeight - currentTitleHeight; 
                     canvas.style.border = "none"; 
@@ -471,7 +463,7 @@
             return { init, start, stop };
         })();
 
-        const interactiveKaleidoscopeLab = (function() { /* ... (codice laboratorio p5.js invariato) ... */ 
+        const interactiveKaleidoscopeLab = (function() { 
             let p5Instance = null; 
             let labIsActive = false;
 
@@ -531,7 +523,7 @@
                         numSpicchi = allowedSpicchiValues[currentSpicchiIndex];
                         numSpicchiDisplay.html(numSpicchi.toString());
                         updateBisectorAngleDisplayP5();
-                        baseDrawing.clear();
+                        // baseDrawing.clear(); // Mantenuto il disegno
                     });
 
                     strokeWeightSlider.input(() => {
@@ -681,7 +673,6 @@
                     const sectionElement = document.getElementById(targetId);
                     if (sectionElement) {
                         const menuHeight = topMenuNav ? topMenuNav.offsetHeight : 0;
-                        // const titleHeight = pageTitleContainer ? pageTitleContainer.offsetHeight : 0; // Non più usato
                         const totalOffset = menuHeight; 
                         const elementPosition = sectionElement.getBoundingClientRect().top + window.pageYOffset;
                         const scrollToPosition = elementPosition - totalOffset - 15; 
