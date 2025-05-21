@@ -160,7 +160,7 @@
             text-align: left;
             margin-bottom: 10px;
         }
-        a { 
+        #argomento4 a { 
             color: #8ab4f8; 
             text-decoration: none;
         }
@@ -416,8 +416,90 @@
         <section id="argomento2" class="content-section">
 
             <h2>Le simmetrie</h2> 
-            <p>L’immagine del caleidoscopio è originata dalla continua riflessione dei frammenti colorati tra uno specchio e l’altro, moltiplicati in modo apparentemente perfetto. 
-                <br> Il processo è quello di una simmetria centrale, e ovviamente il numero delle riflessioni dipende dagli angoli tra gli specchi, che di solito formano un prisma a base triangolare isoscele, riflettente all’interno. </p>
+            <p>
+L’immagine del caleidoscopio è originata dalla continua riflessione dei frammenti colorati tra uno specchio e l’altro, moltiplicati in modo apparentemente perfetto. Il processo è quello di una simmetria centrale, e ovviamente il numero delle riflessioni dipende dagli angoli tra gli specchi, che di solito formano un prisma a base triangolare isoscele, riflettente all’interno. Le simmetrie delle forme in movimento del caleidoscopio sono il risultato dell’intersezione dello studio delle riflessioni con quello delle simmetrie centrali, che tante applicazioni hanno prodotto nell’architettura e nelle arti, ma ancora di più nella decorazione degli oggetti.
+<br>
+<br>
+Ma cos’è una simmetria?
+<br>
+<br>
+Il termine simmetria, dal greco συμμετρια è sinonimo di "giusta proporzione" o anche "proprietà geometrica di solidi e di esseri viventi". Nel linguaggio comune, quando si parla di simmetrie si è soliti riferirsi a quella che in matematica viene chiamata "simmetria bilaterale" ovvero una figura è simmetrica se posso dividerla in due parti uguali e speculari.Ma questa concezione è stata generalizzata, dando alla parola simmetria un più ampio significato geometrico, ovvero aggiungendo alla semplice simmetria, diciamo a specchio, tutti i possibili movimenti che riportano una figura in se stessa. È proprio in questi termini che un gruppo di movimenti rigidi descrive esattamente la simmetria di una figura e, viceversa, attraverso una figura posso visualizzare gli elementi di un gruppo di isometrie. <br>
+Il gruppo di simmetrie di una figura è l’insieme dei movimenti, appunto delle simmetrie, che riportano la figura su se stessa, rendendola intera. </p>
+<p>
+<strong> Simmetria: </strong> <br>
+Consideriamo una figura F del piano E2 ed ƒ appartenente a M.<br>
+Se ƒ è tale che ƒ(F) = F (cioè ƒ è un'isometria che riporta la figura in se stessa), allora ƒ si dice simmetria di F.</p>
+<p>
+Gruppo di simmetrie:<br>
+Tutte le simmetrie di F formano un gruppo chiamato gruppo di simmetria di F e denotato con Isom(F): Isom(F) = { ƒ  M | ƒ(F) = F } 
+<br>
+<br>
+Il tipo di gruppo di simmetrie di una figura ci permette di stabilire il tipo della simmetria della figura presa in esame: per spiegare la matematica dietro il caleidoscopio i gruppi di simmetrie presi maggiormente in considerazione sono i gruppi ciclici e i gruppi diedrali.</p>
+<p>
+<strong> Gruppo ciclico:</strong> <br>
+Il gruppo ciclico Cn In matematica, più precisamente nella teoria dei gruppi, un gruppo ciclico è un gruppo che può essere generato da un unico elemento. Un gruppo C è ciclico se esiste un elemento c del gruppo (detto generatore) tale che C è l’insieme delle potenze di c ad esponente intero.
+<br>
+<br>
+Il gruppo ciclico di ordine n :
+<br>
+<br>
+Cn = < ρ2π/n > = { 1, ρθ, ρθ2, ... , ρθn-1}
+<br>
+<br>
+Ogni gruppo di simmetrie ha un proprio dominio fondamentale.<br>
+Il dominio fondamentale di un gruppo di simmetrie corrisponde alla parte minima di una figura F che, presa singolarmente, permette di riprodurre tutti i movimenti Isom(F). Una volta individuato, ricaviamo l’ordine del gruppo (il numero di elementi che il gruppo contiene e quindi ciò che ne definisce la grandezza) contando quante volte il dominio fondamentale si ripete nella figura.
+</p>
+<p>
+<strong> Gruppo Zn:</strong><br>
+Il gruppo Zn è un insieme di classi di resto di modulo n ed è un gruppo di tipo abeliano con l’operazione di somma modulo n. Ogni elemento di Zn e una classe di resto, che rappresenta tutti i numeri interi che forniscono lo stesso resto quando divisi per n.<br>
+L’addizione nel gruppo Zn si fa eseguendo la somma come in Z e poi prendendo il resto della divisione per n.<br>
+Se n = 5, allora Zn è costituito da {0, 1, 2, 3, 4}. L'operazione è la somma modulo 5:
+<br>
+<br>
+2 + 3 = 5, che ridotto modulo 5 diventa 0. Quindi in Zn, 2 + 3 = 0.
+1 + 4 = 5, che ridotto modulo 5 diventa 0. Quindi in Zn, 1 + 4 = 0.
+2 + 2 = 4, quindi in Zn, 2 + 2 = 4.
+<br>
+<br>
+Di conseguenza Zn = {[0] ,[1] , [2] , ... , [n-1]}.</p>
+<p>
+<strong>Isomorfismo tra gruppi:</strong><br>
+Un isomorfismo  tra gruppi è una corrispondenza biunivoca tra gli insiemi sostegno di due gruppi che conserva le uguaglianze riguardanti le operazioni caratterizzanti i due gruppi.
+<br>
+<br>
+Per ogni n ≥ 1 esiste un’isomorfismo di gruppi fra Zn e Cn. Consideriamo ρ2π/n elemento generatore di Cn, i = 0 , 1 , ... , n - 1, e costruiamo la seguente applicazione:
+<br>
+<br>
+ƒ : Cn → Zn = (ρ2π/n)i → [ i ]
+<br>
+<br>
+ƒ è un isomorfismo di gruppi infatti:<br>
+ƒ ( ρ2π/nn o ρ2π/nm) = ƒ ( ρ2π/nn + m) = [n + m] = [n] + [m]= ƒ ( ρ2π/nn ) + ( ρ2π/nm)
+<br>
+<br>
+In termini più semplici questa proposizione mi dice che posso identificare Zn con Cn in quanto hanno lo stesso ordine, ed intercorrono le stesse relazioni fra i generatori e gli elementi dei relativi gruppi.
+Quest'ultima caratteristica deve essere sempre tenuta in considerazione quando si confrontano due gruppi, infatti vedremo in seguito come C4 e D2 non sono isomorfi, pur avendo lo stesso ordine, proprio per il motivo detto. </p>
+<br>
+<br>
+<strong>Gruppo diedrale di ordine 2n: </strong> <br>
+I gruppi diedrali di ordine 2n sono i gruppi di simmetria dei poligoni regolari a n lati. 
+<br>
+<br>
+I gruppi diedrali di ordine 2n sono i gruppi di simmetria dei poligoni regolari a n lati. L'aggettivo diedrale deriva dal termine diedro(dal greco solido a due facce), che a sua volta discende dal fatto di voler considerare un poligono come un solido degenere ad altezza nulla.
+<br>
+<br>
+Osservazione: <br>
+Prima di studiare un gruppo Dn attraverso una figura di cui è gruppo di simmetria, come si è fatto per i gruppi ciclici, è importante osservare la seguente uguaglianza: 
+<br>
+<br>
+ρθ o rl = rt
+<br>
+<br>
+Ovvero una riflessione di asse l composta con una rotazione di angolo θ corrisponde ad un'altra riflessione di un nuovo asse t. Di conseguenza un elemento di Dn del tipo ρθm o rl può anche essere visto come una riflessione data da una nuova retta. Se Dn = Isom(F) per una qualche figura, tali rette sono tutti i suoi possibili assi di simmetria.<br>
+In conclusione Dn è un gruppo formato da n rotazioni e n riflessioni.
+<br>
+<br>
+Dn = < ρ2π/n , rl > = { 1, ρθ, ρθ2, ... , ρθn-1 , rl , ρθ o rl , ρθ2 o rl , ... , ρθn-1 o rl } </p>
             <br>
             <br>
             <div style="text-align: center;">
