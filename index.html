@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Caleidoscopio Interattivo - Testo Completo</title>
+    <title>Caleidoscopio Interattivo - Aggiunta Sezione Tassellatura</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/lib/addons/p5.dom.min.js"></script>
     <style>
@@ -23,11 +23,22 @@
             min-height: 100vh;
             overflow-x: hidden; 
         }
-        body.simulation-fullscreen { /* Unica classe per gestire overflow quando sim è fullscreen */
+        body.simulation-fullscreen { 
             overflow: hidden !important; 
         }
-        .main-content-area { /* Questo gestirà lo scroll per le sezioni di testo */
+        .main-content-area { 
             overflow-y: auto;  
+        }
+
+        .immagine-container {
+        text-align: center; /* Centra le immagini orizzontalmente nel contenitore */
+        }
+
+        .immagine {
+        display: inline-block; /* Allinea le immagini in linea orizzontalmente */
+        margin: 0 10px; /* Spazio orizzontale tra le immagini */
+        width: 30%; /* Larghezza dell'immagine, ad esempio 30% del contenitore */
+        height: auto; /* Altezza automatica, mantiene il rapporto originale */
         }
 
 
@@ -272,8 +283,8 @@
         <ul>
             <li><a data-target="simulationContainer" class="active">Home</a></li>
             <li><a data-target="argomento1">Cos'è?</a></li>
-            <li><a data-target="argomento2">Come Funziona & Simmetrie</a></li> 
-            <li><a data-target="argomento3">Laboratorio Disegno</a></li> 
+            <li><a data-target="argomento2">Come Funziona & Simmetrie</a></li>
+            <li><a data-target="argomentoTassellatura">Tassellatura</a></li> <li><a data-target="argomento3">Laboratorio Disegno</a></li> 
             <li><a data-target="argomento4">About</a></li>
         </ul>
     </nav>
@@ -297,26 +308,39 @@
             <p>Il principio di funzionamento di un caleidoscopio si basa sulla riflessione multipla della luce. All'interno di un tubo sono posizionati, longitudinalmente, due o più specchi piani. Comunemente, si usano tre specchi disposti a formare un prisma a base triangolare equilatera.</p>
             <p>Ad un'estremità del tubo si trova una camera traslucida contenente piccoli frammenti colorati. La luce che attraversa questi oggetti viene riflessa dagli specchi, creando un pattern simmetrico. Ruotando il tubo, gli oggetti si muovono, generando nuove configurazioni. </p>
             <p>Solitamente il numero di specchi impiegati è tre, i quali vengono disposti a triangolo equilatero, in modo da formare la seguente sequenza di angoli: 60°-60°-60° (ma in realtà sono possibili altre due combinazioni: 45°-45°-90° e 30°-60°-90°). Per costruire il caleidoscopio, è stato necessario stabilire il rapporto che vi era tra il diametro del tubo, e la larghezza degli specchi stessi. Si è quindi studiata la proporzione tra triangolo equilatero e la circonferenza ad esso circoscritta.</p>
+           
+           <div class="immagine-container">
+                <img src="equilatero.png" alt="60°-60°-60°" class="immagine" title="60°-60°-60°">
+                <img src="isoscele.png" alt="45°-45°-90°" class="immagine" title="45°-45°-90°">
+                <img src="scaleno.png" alt="30°-60°-90°" class="immagine" title="30°-60°-90°">
+              </div>
+
             <h3>Le simmetrie</h3> 
             <p>L’immagine del caleidoscopio è originata dalla continua riflessione dei frammenti colorati tra uno specchio e l’altro, moltiplicati in modo apparentemente perfetto. Il processo è quello di una simmetria centrale, e ovviamente il numero delle riflessioni dipende dagli angoli tra gli specchi, che di solito formano un prisma a base triangolare isoscele, riflettente all’interno. Le simmetrie delle forme in movimento del caleidoscopio sono il risultato dell’intersezione dello studio delle riflessioni con quello delle simmetrie centrali, che tante applicazioni hanno prodotto nell’architettura e nelle arti, ma ancora di più nella decorazione degli oggetti.</p>
             
             <div id="p5StellaLab">
                 <h4>Laboratorio: Stella con Simmetrie</h4>
-                <div id="p5StellaControlsContainer">
-                    </div>
-                <div id="p5StellaCanvasContainer" style="margin-top:10px;">
-                    </div>
-                <p id="instructions-p5" style="font-style: italic; font-size: 0.9em; color: #aaa; text-align:center; margin-top:5px;">Usa lo slider per cambiare le punte.</p>
+                <div id="p5StellaControlsContainer"></div>
+                <div id="p5StellaCanvasContainer" style="margin-top:10px;"></div>
             </div>
 
             <p>Esse hanno offerto a Coxeter, uno dei più noti matematici del XX secolo, lo spunto per nuove ricerche legate a spazi n-dimensionali che lo hanno portato alla classificazione dei politopi, che sono gli equivalenti dei poliedri nelle dimensioni superiori alla terza, che possono essere costruiti matematicamente ma solo immaginati nel mondo reale. Coxeter fu interessato dalle simmetrie prodotte dal caleidoscopio e da qui ne derivò lo studio sui gruppi di simmetrie, chiamati Gruppi di Coxeter.</p>
             <p>I gruppi di Coxeter sono strutture algebriche che descrivono le simmetrie generate da riflessioni. In termini semplici, un gruppo di Coxeter è un insieme di trasformazioni (come riflessioni, rotazioni, ecc.) che possono essere composte tra loro. In pratica, i gruppi di Coxeter danno un linguaggio matematico preciso per studiare strutture geometriche simmetriche, spesso in modo molto visuale tramite diagrammi di Coxeter.</p>
         </section>
+
+        <section id="argomentoTassellatura" class="content-section">
+            <h2>Tassellatura e Caleidoscopi</h2>
+            <p>Le tassellature, o tassellazioni, del piano sono modi di ricoprire una superficie piana con una o più figure geometriche (chiamate "tessere") senza sovrapposizioni e senza lasciare spazi vuoti. I pattern generati dai caleidoscopi sono intrinsecamente legati al concetto di tassellatura.</p>
+            <p>Quando si guarda attraverso un caleidoscopio, le riflessioni multiple di piccoli oggetti colorati creano un settore fondamentale che viene replicato simmetricamente. Questa replicazione, se estesa idealmente all'infinito, formerebbe una tassellatura del piano. I tipi di simmetria osservati (rotazionale, riflessiva) sono gli stessi che definiscono i 17 gruppi cristallografici piani (o "gruppi di carta da parati"), che descrivono tutti i modi possibili per tassellare un piano in modo ripetitivo.</p>
+            <p>M.C. Escher è famoso per le sue tassellature artistiche, spesso utilizzando figure complesse e riconoscibili che si incastrano perfettamente. Molte delle sue opere si basano sulla modifica di tassellature regolari (formate da quadrati, triangoli equilateri o esagoni regolari) e sull'applicazione di principi di simmetria, simili a quelli che si manifestano in un caleidoscopio.</p>
+            <p>Ad esempio, un caleidoscopio a tre specchi che formano angoli di 60° tra loro produce un pattern con simmetria esagonale (corrispondente al gruppo p6m), che è una delle tassellature più dense e affascinanti.</p>
+        </section>
         
         <section id="argomento3" class="content-section">
             <h2>Laboratorio Caleidoscopio (Disegno Libero)</h2> 
-            <p>Disegna sul canvas sottostante. Modifica il numero di "spicchi" (riflessioni), il colore e lo spessore del tratto per vedere come cambiano i pattern caleidoscopici. Premi SPAZIO per pulire il disegno.</p>
-            <div id="p5LabContainer"> <div id="controls-container-p5">
+            <p>Disegna sul canvas sottostante...</p>
+            <div id="p5LabContainer"> 
+                <div id="controls-container-p5">
                     <div class="control-group" id="numSpicchiControl-p5">
                         <label for="numSpicchiSlider-p5">Numero di spicchi:</label>
                         <div class="slider-container">
@@ -521,7 +545,7 @@
         const interactiveKaleidoscopeLab = (function() { /* Lab p5.js principale, per argomento3 */
             let p5Instance = null; 
             let labIsActive = false;
-            const sketchCode = function(p) { 
+            const sketchCode = function(p) { /* ... (codice sketch p5 principale come prima) ... */ 
                 let baseDrawing; let numSpicchi; let numSpicchiSlider; let numSpicchiDisplay;
                 let bisectorAngleDisplay; let colorPicker; let strokeWeightSlider;
                 let strokeWeightDisplay; let currentStrokeWeight = 4;
@@ -543,15 +567,7 @@
                     strokeWeightSlider.elt.max = 20; strokeWeightSlider.elt.value = currentStrokeWeight;
                     strokeWeightSlider.elt.step = 1;
                     strokeWeightDisplay = p.select('#strokeWeightDisplay-p5'); strokeWeightDisplay.html(currentStrokeWeight.toString());
-                    
-                    numSpicchiSlider.input(() => { 
-                        currentSpicchiIndex = numSpicchiSlider.value(); 
-                        numSpicchi = allowedSpicchiValues[currentSpicchiIndex]; 
-                        numSpicchiDisplay.html(numSpicchi.toString()); 
-                        updateBisectorAngleDisplayP5(); 
-                        // baseDrawing.clear(); // MODIFICATO: Non pulire più il disegno
-                    });
-
+                    numSpicchiSlider.input(() => { currentSpicchiIndex = numSpicchiSlider.value(); numSpicchi = allowedSpicchiValues[currentSpicchiIndex]; numSpicchiDisplay.html(numSpicchi.toString()); updateBisectorAngleDisplayP5(); /* baseDrawing.clear(); RIMOSSO */ });
                     strokeWeightSlider.input(() => { currentStrokeWeight = strokeWeightSlider.value(); strokeWeightDisplay.html(currentStrokeWeight.toString()); });
                     p.background(245);
                 };
@@ -579,7 +595,7 @@
             return { start, stop };
         })();
         
-        const p5StellaLab = (function() { /* ... (codice lab stella p5.js invariato) ... */
+        const p5StellaLab = (function() { /* ... (codice lab stella p5.js invariato, con modifica al translate e raggio) ... */
             let p5Instance = null;
             let labIsActive = false;
             const sketchCodeStella = function(p) {
@@ -602,11 +618,11 @@
                 };
                 p.draw = function() {
                     p.background(0); 
-                    p.translate(p.width / 2, p.height / 2 - 60); // SPOSTATO PIU' IN ALTO
+                    p.translate(p.width / 2, p.height / 2 - 40); // SPOSTATO PIU' IN ALTO
 
                     let n = sliderStella.value();
                     let angleStep = 360 / n;
-                    let r = p.min(p.width, p.height) / 2 * 0.65; // RAGGIO STELLA RIDOTTO
+                    let r = p.min(p.width, p.height) / 2 * 0.7; // RAGGIO STELLA RIDOTTO
                     let innerR = r * 0.5;
                     p.noFill(); 
                     p.stroke(255);    
@@ -627,11 +643,11 @@
                     p.fill(220); 
                     p.textAlign(p.CENTER, p.TOP); 
                     p.textSize(16);
-                    let textBlockStartY = r + 40; // AUMENTATO SPAZIO SOTTO LA STELLA
+                    let textBlockStartY = r + 30; // AUMENTATO SPAZIO SOTTO LA STELLA
 
                     p.text(n + " punte", 0, textBlockStartY);
-                    p.text("Simmetrie: " + n, 0, textBlockStartY + 25); // AUMENTATO SPAZIO TRA RIGHE
-                    p.text("Angolo tra punte: " + p.nf(angleStep, 1, 1) + "°", 0, textBlockStartY + 50); // AUMENTATO SPAZIO TRA RIGHE
+                    p.text("Simmetrie: " + n, 0, textBlockStartY + 25); 
+                    p.text("Angolo tra punte: " + p.nf(angleStep, 1, 1) + "°", 0, textBlockStartY + 50); 
                     p.pop();
                     p.push();
                     p.stroke(255, 0, 0, 150); 
@@ -652,7 +668,10 @@
             }
             function stop() {
                 labIsActive = false;
-                if (p5Instance) { p5Instance.noLoop(); p5Instance.remove(); p5Instance = null;
+                if (p5Instance) {
+                    p5Instance.noLoop();
+                    p5Instance.remove(); 
+                    p5Instance = null;
                     const controlsContainer = document.getElementById('p5StellaControlsContainer');
                     if (controlsContainer) controlsContainer.innerHTML = '';
                      const canvasContainer = document.getElementById('p5StellaCanvasContainer');
@@ -667,6 +686,7 @@
             simulationContainer: document.getElementById('simulationContainer'),
             argomento1: document.getElementById('argomento1'),
             argomento2: document.getElementById('argomento2'), 
+            argomentoTassellatura: document.getElementById('argomentoTassellatura'), // NUOVA SEZIONE
             argomento3: document.getElementById('argomento3'), 
             argomento4: document.getElementById('argomento4')
         };
