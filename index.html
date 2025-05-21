@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Caleidoscopio Interattivo - p5.js Lab</title>
+    <title>Caleidoscopio Interattivo - Testo Completo</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/lib/addons/p5.dom.min.js"></script>
     <style>
         html, body {
             height: 100%; 
@@ -22,12 +23,13 @@
             min-height: 100vh;
             overflow-x: hidden; 
         }
-        body.simulation-active, body.lab-active { 
+        body.simulation-fullscreen { /* Unica classe per gestire overflow quando sim è fullscreen */
             overflow: hidden !important; 
         }
-        body.content-visible {
+        .main-content-area { /* Questo gestirà lo scroll per le sezioni di testo */
             overflow-y: auto;  
         }
+
 
         nav.top-menu {
             background-color: rgba(10, 10, 10, 0.85); 
@@ -77,6 +79,19 @@
             background-color: rgba(255, 255, 255, 0.1); 
         }
         
+        .page-title-container { 
+            width: 100%;
+            text-align: center;
+            padding: 20px 0 10px 0; 
+            flex-shrink: 0;
+            display: none; 
+        }
+        .page-title-container h1 {
+            color: #FFFFFF; 
+            margin: 0;
+            font-size: 2.2em; 
+        }
+
         .main-content-area {
             flex-grow: 1;
             width: 100%;
@@ -98,7 +113,7 @@
             box-shadow: 0px 0px 20px rgba(200, 200, 200, 0.3);
         }
         
-        #homePageTitle {
+        #homePageTitle { 
             display: none; 
             text-align: center;
             padding: 15px 0; 
@@ -111,7 +126,6 @@
             font-size: 2.5em; 
         }
 
-
         .content-section {
             display: none; 
             padding: 25px;
@@ -120,12 +134,22 @@
             max-width: 800px; 
             background-color: transparent; 
         }
-        .content-section h2 {
+        .content-section h2, .content-section h3, .content-section h4 {
             color: #E0E0E0; 
             border-bottom: 2px solid #777777; 
-            padding-bottom: 10px; margin-top: 20px; 
+            padding-bottom: 10px; 
+            margin-top: 20px; 
             font-size: 1.6em; 
         }
+         .content-section h3 { font-size: 1.4em; border-bottom-style: dashed; }
+         .content-section h4 { 
+            font-size: 1.2em; 
+            border-bottom-style: dotted; 
+            margin-top: 15px; 
+            margin-bottom: 10px;
+            color: #CCCCCC; 
+        }
+
         #argomento4 p {
             text-align: left;
             margin-bottom: 10px;
@@ -138,77 +162,94 @@
             text-decoration: underline;
         }
 
-        /* Stili per il Laboratorio p5.js */
-        #p5LabContainer { 
+        /* Stili per i Laboratori p5.js */
+        #p5LabContainer, #p5StellaLab { 
             display: flex;
-            flex-direction: row; /* MODIFICATO: per layout orizzontale */
-            align-items: flex-start; /* Allinea in alto */
-            justify-content: center; /* Centra il gruppo canvas+controlli */
-            flex-wrap: wrap; /* Permette ai controlli di andare sotto su schermi piccoli */
-            gap: 20px; /* Aumentato gap tra canvas e controlli */
+            flex-direction: column; 
+            align-items: center; 
+            gap: 15px;
             margin-top: 10px; 
             width: 100%;
-            padding: 10px; /* Aggiunto padding per non toccare i bordi */
+            padding: 10px; 
             box-sizing: border-box;
-        }
-        #p5CanvasContainer { 
-            box-shadow: 0 0 10px rgba(255,255,255,0.2);
-            flex-shrink: 0; /* Non far restringere il canvas */
-        }
-        #controls-container-p5 { 
-            padding: 15px;
-            background-color: #181818; 
+            background-color: #111111; 
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            width: 280px; /* Larghezza fissa per i controlli */
-            min-width: 250px; 
-            color: #E0E0E0; 
-            /* margin-top: 0; Rimosso, il gap è gestito da p5LabContainer */
-            /* margin-left: 20px; AGGIUNTO (o gestito da gap) */
-            flex-shrink: 0;
+            margin-bottom: 20px;
         }
-        #controls-container-p5 .control-group {
+        #p5StellaLab { 
+             background-color: transparent; /* Rimosso sfondo specifico per Stella Lab */
+             padding: 0; 
+             border-radius: 0;
+             box-shadow: none; 
+             margin-top: 25px; /* Aumentato spazio sopra */
+             margin-bottom: 25px; /* Aumentato spazio sotto */
+        }
+
+        #p5CanvasContainer, #p5StellaCanvasContainer { 
+            box-shadow: 0 0 10px rgba(255,255,255,0.1); 
+            flex-shrink: 0; 
+        }
+        #controls-container-p5, #p5StellaControlsContainer { 
+            padding: 10px; 
+            background-color: #1C1C1C; 
+            border-radius: 5px;
+            display: flex;
+            flex-direction: row; 
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 10px; 
+            width: auto; 
+            min-width: 280px; 
+            max-width: 100%; 
+            color: #D0D0D0; 
+        }
+        #p5StellaControlsContainer { 
+            background-color: transparent; 
+            box-shadow: none;
+            justify-content: flex-start; 
+        }
+
+        #controls-container-p5 .control-group, #p5StellaControlsContainer .control-group {
             display: flex;
             align-items: center;
-            gap: 10px;
-            justify-content: space-between;
+            gap: 8px;
         }
-        #controls-container-p5 .control-group label {
+        #controls-container-p5 .control-group label, 
+        #p5StellaControlsContainer p, 
+        #p5StellaControlsContainer span { 
             font-weight: normal; 
-            flex-basis: auto; /* Rimosso flex-basis fisso, si adatterà */
-            margin-right: 5px; /* Aggiunto per separare da slider */
+            margin: 0; 
             text-align: left;
+            color: #D0D0D0;
         }
-        #controls-container-p5 .slider-container {
+        #controls-container-p5 .slider-container, #p5StellaControlsContainer .slider-container { 
             display: flex;
             align-items: center;
             gap: 8px;
             flex-grow: 1;
         }
-        #controls-container-p5 input[type="range"] {
+        #controls-container-p5 input[type="range"], #p5StellaControlsContainer input[type="range"] {
             flex-grow: 1;
-            border: none; 
-            outline: none;
-            padding: 0; 
+            min-width: 120px; 
+            border: none; outline: none; padding: 0; 
         }
-        #controls-container-p5 .control-group span { 
-            min-width: 30px;
+        #controls-container-p5 .control-group span, #p5StellaControlsContainer span.value-display { 
+            min-width: 25px; 
             text-align: right;
             font-weight: normal;
         }
-         #controls-container-p5 input[type="color"] {
-            width: 40px; height: 30px; padding: 0; border: 1px solid #555;
+         #controls-container-p5 input[type="color"], #p5StellaControlsContainer input[type="color"] {
+            width: 35px; height: 25px; padding: 0; border: 1px solid #444;
             background: none; 
-            margin-left: auto; /* Spinge il color picker a destra se c'è spazio */
+            margin-left: 5px; 
         }
-        #controls-container-p5 #instructions {
+        #controls-container-p5 #instructions, #p5StellaLab #instructions-p5 {
             margin-top: 5px;
             font-style: italic;
             font-size: 0.9em;
-            color: #bbb;
+            color: #aaa;
+            width: 100%; text-align: center;
         }
 
         footer {
@@ -231,35 +272,48 @@
         <ul>
             <li><a data-target="simulationContainer" class="active">Home</a></li>
             <li><a data-target="argomento1">Cos'è?</a></li>
-            <li><a data-target="argomento2">Come Funziona?</a></li>
-            <li><a data-target="argomento3">Laboratorio</a></li> 
-            <li><a data-target="argomento4">About</a></li>
+            <li><a data-target="argomento2">Come Funziona & Simmetrie</a></li> <li><a data-target="argomento3">Laboratorio Disegno</a></li> <li><a data-target="argomento4">About</a></li>
         </ul>
     </nav>
     
     <div class="main-content-area">
         <div id="simulationContainer">
             <canvas id="kaleidoscopeCanvas"></canvas>
-            <div id="homePageTitle" style="display: none;"> 
+            <div id="homePageTitle"> 
                  <h1>CALEIDOSCOPIO</h1>
             </div>
         </div>
 
         <section id="argomento1" class="content-section">
             <h2>Cos'è un caleidoscopio?</h2>
-            <p>Il caleidoscopio è uno strumento ottico...</p>
+            <p>Il caleidoscopio è uno strumento ottico che, attraverso una serie di specchi inclinati, crea una molteplicità di immagini simmetriche a partire da piccoli oggetti colorati posti al suo interno. Il termine deriva dal greco καλός (kalós), "bello", εἶδος (eîdos), "immagine", e σκοπέω (skopéō), "guardare". </p>
+            <p>Inventato da Sir David Brewster nel 1816, il caleidoscopio è diventato rapidamente un giocattolo popolare, ma ha anche trovato applicazioni nell'arte e nel design per la sua capacità di generare pattern complessi e affascinanti.</p>
+            <p>Il caleidoscopio sfrutta il principio della riflessione tra specchi, conosciuto già dall’ottica classica, ma fu inventato come oggetto nel 1816 da David Brewster mentre studiava la polarizzazione della luce. Venne brevettato l’anno successivo. Esso è costituito da tre specchi infilati in un tubo con un buco ad un’estremità e dei vetrini colorati in un doppio fondo dall’altra parte. La costruzione del caleidoscopio venne programmata per il 1817 ma prima che l’oggetto potesse uscire l’idea venne copiata e l’uscita preceduta a Londra e Parigi.</p>
         </section>
         <section id="argomento2" class="content-section">
             <h2>Come funziona?</h2>
-            <p>Il principio di funzionamento...</p>
+            <p>Il principio di funzionamento di un caleidoscopio si basa sulla riflessione multipla della luce. All'interno di un tubo sono posizionati, longitudinalmente, due o più specchi piani. Comunemente, si usano tre specchi disposti a formare un prisma a base triangolare equilatera.</p>
+            <p>Ad un'estremità del tubo si trova una camera traslucida contenente piccoli frammenti colorati. La luce che attraversa questi oggetti viene riflessa dagli specchi, creando un pattern simmetrico. Ruotando il tubo, gli oggetti si muovono, generando nuove configurazioni. </p>
+            <p>Solitamente il numero di specchi impiegati è tre, i quali vengono disposti a triangolo equilatero, in modo da formare la seguente sequenza di angoli: 60°-60°-60° (ma in realtà sono possibili altre due combinazioni: 45°-45°-90° e 30°-60°-90°). Per costruire il caleidoscopio, è stato necessario stabilire il rapporto che vi era tra il diametro del tubo, e la larghezza degli specchi stessi. Si è quindi studiata la proporzione tra triangolo equilatero e la circonferenza ad esso circoscritta.</p>
+            <h3>Le simmetrie</h3> <p>L’immagine del caleidoscopio è originata dalla continua riflessione dei frammenti colorati tra uno specchio e l’altro, moltiplicati in modo apparentemente perfetto. Il processo è quello di una simmetria centrale, e ovviamente il numero delle riflessioni dipende dagli angoli tra gli specchi, che di solito formano un prisma a base triangolare isoscele, riflettente all’interno. Le simmetrie delle forme in movimento del caleidoscopio sono il risultato dell’intersezione dello studio delle riflessioni con quello delle simmetrie centrali, che tante applicazioni hanno prodotto nell’architettura e nelle arti, ma ancora di più nella decorazione degli oggetti.</p>
+            
+            <div id="p5StellaLab">
+                <h4>Laboratorio: Stella con Simmetrie</h4>
+                <div id="p5StellaControlsContainer">
+                    </div>
+                <div id="p5StellaCanvasContainer" style="margin-top:10px;">
+                    </div>
+                <p id="instructions-p5" style="font-style: italic; font-size: 0.9em; color: #aaa; text-align:center; margin-top:5px;">Usa lo slider per cambiare le punte. Premi SPAZIO per pulire (se implementato nello sketch).</p>
+            </div>
+
+            <p>Esse hanno offerto a Coxeter, uno dei più noti matematici del XX secolo, lo spunto per nuove ricerche legate a spazi n-dimensionali che lo hanno portato alla classificazione dei politopi, che sono gli equivalenti dei poliedri nelle dimensioni superiori alla terza, che possono essere costruiti matematicamente ma solo immaginati nel mondo reale. Coxeter fu interessato dalle simmetrie prodotte dal caleidoscopio e da qui ne derivò lo studio sui gruppi di simmetrie, chiamati Gruppi di Coxeter.</p>
+            <p>I gruppi di Coxeter sono strutture algebriche che descrivono le simmetrie generate da riflessioni. In termini semplici, un gruppo di Coxeter è un insieme di trasformazioni (come riflessioni, rotazioni, ecc.) che possono essere composte tra loro. In pratica, i gruppi di Coxeter danno un linguaggio matematico preciso per studiare strutture geometriche simmetriche, spesso in modo molto visuale tramite diagrammi di Coxeter.</p>
         </section>
         
         <section id="argomento3" class="content-section">
-            <h2>Laboratorio Caleidoscopio p5.js</h2>
+            <h2>Laboratorio Caleidoscopio (Disegno Libero)</h2> 
             <p>Disegna sul canvas sottostante. Modifica il numero di "spicchi" (riflessioni), il colore e lo spessore del tratto per vedere come cambiano i pattern caleidoscopici. Premi SPAZIO per pulire il disegno.</p>
-            <div id="p5LabContainer">
-                <div id="p5CanvasContainer"></div> 
-                <div id="controls-container-p5">
+            <div id="p5LabContainer"> <div id="controls-container-p5">
                     <div class="control-group" id="numSpicchiControl-p5">
                         <label for="numSpicchiSlider-p5">Numero di spicchi:</label>
                         <div class="slider-container">
@@ -283,10 +337,8 @@
                     </div>
                     <div id="instructions-p5"><p><em>Premi SPAZIO per pulire il disegno.</em></p></div>
                 </div>
+                <div id="p5CanvasContainer" style="margin-top:15px;"></div>
             </div>
-             <p style="height: 300px;">Testo aggiuntivo per forzare lo scroll...</p> 
-             <p>Altro testo...</p>
-             <p>Ancora testo...</p>
         </section>
 
         <section id="argomento4" class="content-section">
@@ -294,7 +346,7 @@
             <p>Introduzione storica: <a href="https://it.wikipedia.org/wiki/Caleidoscopio" target="_blank" rel="noopener noreferrer">Wikipedia - Caleidoscopio</a></p>
             <p>Funzionamento: <a href="https://www.giovaniperlascienza.it/site/le-nostre-attivita/attivita-1/il-caleidoscopio/" target="_blank" rel="noopener noreferrer">Giovani per la Scienza</a></p>
             <p>Gruppi di Coxeter: <a href="https://it.wikipedia.org/wiki/Gruppo_di_Coxeter" target="_blank" rel="noopener noreferrer">Wikipedia - Gruppo di Coxeter</a></p>
-            <p>Video (esempio): <a href="http://www.youtube.com" target="_blank" rel="noopener noreferrer">YouTube - Caleidoscopi</a></p>
+            <p>Video (esempio): <a href="https://www.youtube.com/watch?v=QHc4tW2NqP8" target="_blank" rel="noopener noreferrer">YouTube - Esempio Caleidoscopio</a></p> 
             <p>Parte matematica: <a href="https://web.math.princeton.edu/~jl5270/talks/mathematicsInKaleidoscopes.pdf" target="_blank" rel="noopener noreferrer">Princeton University - Mathematics In Kaleidoscopes (PDF)</a></p>
         </section>
     </div>
@@ -308,18 +360,16 @@
         const topMenuNav = document.querySelector('nav.top-menu');
         const homePageTitle = document.getElementById('homePageTitle'); 
         const pageFooter = document.querySelector('footer');
+        const pageTitleContainer = document.querySelector('.page-title-container');
 
         let lastScrollTop = 0;
         const menuHeight = topMenuNav ? topMenuNav.offsetHeight : 60; 
         const scrollThreshold = 20; 
 
         window.addEventListener('scroll', function() {
-            if (document.body.classList.contains('simulation-active') || 
-                (document.body.classList.contains('lab-active'))) { 
+            if (document.body.classList.contains('simulation-fullscreen')) { 
                 if (topMenuNav) {
-                    if (document.body.classList.contains('simulation-active') && homePageTitle && homePageTitle.style.display !== 'none') {
-                        topMenuNav.style.top = "0";
-                    }
+                     topMenuNav.style.top = "0";
                 }
                 return;
             }
@@ -463,188 +513,199 @@
             return { init, start, stop };
         })();
 
-        const interactiveKaleidoscopeLab = (function() { 
+        const interactiveKaleidoscopeLab = (function() { /* Lab p5.js principale, per argomento3 */
             let p5Instance = null; 
             let labIsActive = false;
-
-            const sketchCode = function(p) {
-                let baseDrawing;
-                let numSpicchi;
-                let numSpicchiSlider;
-                let numSpicchiDisplay;
-                let bisectorAngleDisplay;
-                let colorPicker;
-                let strokeWeightSlider;
-                let strokeWeightDisplay;
-                let currentStrokeWeight = 4;
+            const sketchCode = function(p) { /* ... (codice sketch p5 principale come prima) ... */ 
+                let baseDrawing; let numSpicchi; let numSpicchiSlider; let numSpicchiDisplay;
+                let bisectorAngleDisplay; let colorPicker; let strokeWeightSlider;
+                let strokeWeightDisplay; let currentStrokeWeight = 4;
                 const allowedSpicchiValues = [2, 4, 6, 8, 10, 12, 18, 20, 24];
                 let currentSpicchiIndex = 2;
-
                 p.setup = function() {
-                    let canvas = p.createCanvas(600, 600); 
-                    canvas.parent('p5CanvasContainer'); 
-                    p.angleMode(p.DEGREES);
-
-                    baseDrawing = p.createGraphics(p.width, p.height);
-                    baseDrawing.clear();
-
-                    numSpicchiSlider = p.select('#numSpicchiSlider-p5');
-                    numSpicchiSlider.elt.min = 0;
-                    numSpicchiSlider.elt.max = allowedSpicchiValues.length - 1;
-                    numSpicchiSlider.elt.value = currentSpicchiIndex;
+                    let canvas = p.createCanvas(600, 600); canvas.parent('p5CanvasContainer'); p.angleMode(p.DEGREES);
+                    baseDrawing = p.createGraphics(p.width, p.height); baseDrawing.clear();
+                    numSpicchiSlider = p.select('#numSpicchiSlider-p5'); numSpicchiSlider.elt.min = 0;
+                    numSpicchiSlider.elt.max = allowedSpicchiValues.length - 1; numSpicchiSlider.elt.value = currentSpicchiIndex;
                     numSpicchiSlider.elt.step = 1;
-
-                    numSpicchiDisplay = p.select('#numSpicchiDisplay-p5');
-                    numSpicchi = allowedSpicchiValues[currentSpicchiIndex];
+                    numSpicchiDisplay = p.select('#numSpicchiDisplay-p5'); numSpicchi = allowedSpicchiValues[currentSpicchiIndex];
                     numSpicchiDisplay.html(numSpicchi.toString());
-
-                    bisectorAngleDisplay = p.select('#bisectorAngleDisplay-p5');
-                    updateBisectorAngleDisplayP5();
-
+                    bisectorAngleDisplay = p.select('#bisectorAngleDisplay-p5'); updateBisectorAngleDisplayP5();
                     colorPicker = p.select('#colorPickerInput-p5');
-                    if (!colorPicker.elt) { 
-                        colorPicker = document.getElementById('colorPickerInput-p5');
-                        if (colorPicker) colorPicker.value = '#E74C3C'; 
-                    } else {
-                         colorPicker.value('#E74C3C');
-                    }
-
-                    strokeWeightSlider = p.select('#strokeWeightSlider-p5');
-                    strokeWeightSlider.elt.min = 1;
-                    strokeWeightSlider.elt.max = 20;
-                    strokeWeightSlider.elt.value = currentStrokeWeight;
+                    if (!colorPicker.elt) { colorPicker = document.getElementById('colorPickerInput-p5'); if (colorPicker) colorPicker.value = '#E74C3C';}
+                    else { colorPicker.value('#E74C3C');}
+                    strokeWeightSlider = p.select('#strokeWeightSlider-p5'); strokeWeightSlider.elt.min = 1;
+                    strokeWeightSlider.elt.max = 20; strokeWeightSlider.elt.value = currentStrokeWeight;
                     strokeWeightSlider.elt.step = 1;
-
-                    strokeWeightDisplay = p.select('#strokeWeightDisplay-p5');
-                    strokeWeightDisplay.html(currentStrokeWeight.toString());
-
-                    numSpicchiSlider.input(() => {
-                        currentSpicchiIndex = numSpicchiSlider.value();
-                        numSpicchi = allowedSpicchiValues[currentSpicchiIndex];
-                        numSpicchiDisplay.html(numSpicchi.toString());
-                        updateBisectorAngleDisplayP5();
-                        // baseDrawing.clear(); // Mantenuto il disegno
-                    });
-
-                    strokeWeightSlider.input(() => {
-                        currentStrokeWeight = strokeWeightSlider.value();
-                        strokeWeightDisplay.html(currentStrokeWeight.toString());
-                    });
+                    strokeWeightDisplay = p.select('#strokeWeightDisplay-p5'); strokeWeightDisplay.html(currentStrokeWeight.toString());
+                    numSpicchiSlider.input(() => { currentSpicchiIndex = numSpicchiSlider.value(); numSpicchi = allowedSpicchiValues[currentSpicchiIndex]; numSpicchiDisplay.html(numSpicchi.toString()); updateBisectorAngleDisplayP5(); baseDrawing.clear(); });
+                    strokeWeightSlider.input(() => { currentStrokeWeight = strokeWeightSlider.value(); strokeWeightDisplay.html(currentStrokeWeight.toString()); });
                     p.background(245);
                 };
-
-                function updateBisectorAngleDisplayP5() {
-                    if (numSpicchi > 0) {
-                        let angleBetweenBisectors = 360 / numSpicchi;
-                        bisectorAngleDisplay.html(angleBetweenBisectors.toFixed(1) + "°");
-                    } else {
-                        bisectorAngleDisplay.html("N/A");
-                    }
-                }
-
+                function updateBisectorAngleDisplayP5() { if (numSpicchi > 0) { let angleBetweenBisectors = 360 / numSpicchi; bisectorAngleDisplay.html(angleBetweenBisectors.toFixed(1) + "°"); } else { bisectorAngleDisplay.html("N/A"); } }
                 p.draw = function() {
                     p.background(245);
                     if (p.mouseIsPressed && p.mouseY < p.height && p.mouseX < p.width && p.mouseX > 0 && p.mouseY > 0) {
                         let currentColorValue;
-                        if (colorPicker.elt) { 
-                           currentColorValue = colorPicker.value();
-                        } else if (colorPicker) { 
-                           currentColorValue = colorPicker.value;
-                        } else {
-                            currentColorValue = '#E74C3C'; 
-                        }
+                        if (colorPicker.elt) { currentColorValue = colorPicker.value(); } else if (colorPicker) { currentColorValue = colorPicker.value; } else { currentColorValue = '#E74C3C'; }
                         let p5Col = p.color(currentColorValue);
-                        
-                        baseDrawing.stroke(p.red(p5Col), p.green(p5Col), p.blue(p5Col), 180);
-                        baseDrawing.strokeWeight(currentStrokeWeight);
-                        baseDrawing.line(p.pmouseX, p.pmouseY, p.mouseX, p.mouseY);
+                        baseDrawing.stroke(p.red(p5Col), p.green(p5Col), p.blue(p5Col), 180); baseDrawing.strokeWeight(currentStrokeWeight); baseDrawing.line(p.pmouseX, p.pmouseY, p.mouseX, p.mouseY);
                     }
-
-                    p.translate(p.width / 2, p.height / 2); 
-                    
-                    let anglePerSpicchio = 360 / numSpicchi;
-
-                    if (numSpicchi > 0) { 
-                        p.push();
-                        p.stroke(255, 0, 0, 100); 
-                        p.strokeWeight(1.5); 
-                        for (let i = 0; i < numSpicchi; i++) {
-                            let bisectorAngle = (i * anglePerSpicchio) + (anglePerSpicchio / 2);
-                            let x2 = p.cos(bisectorAngle) * (p.max(p.width, p.height) / 1.5); 
-                            let y2 = p.sin(bisectorAngle) * (p.max(p.width, p.height) / 1.5);
-                            p.line(0, 0, x2, y2); 
-                        }
+                    p.translate(p.width / 2, p.height / 2); let anglePerSpicchio = 360 / numSpicchi;
+                    if (numSpicchi > 0) {
+                        p.push(); p.stroke(255, 0, 0, 100); p.strokeWeight(1.5);
+                        for (let i = 0; i < numSpicchi; i++) { let bisectorAngle = (i * anglePerSpicchio) + (anglePerSpicchio / 2); let x2 = p.cos(bisectorAngle) * (p.max(p.width, p.height) / 1.5); let y2 = p.sin(bisectorAngle) * (p.max(p.width, p.height) / 1.5); p.line(0, 0, x2, y2); }
                         p.pop();
-
-                        for (let i = 0; i < numSpicchi; i++) {
-                            p.push();
-                            p.rotate(i * anglePerSpicchio);
-                            if (i % 2 === 1) {
-                                p.scale(1, -1);
-                            }
-                            p.imageMode(p.CENTER);
-                            p.image(baseDrawing, 0, 0); 
-                            p.pop();
-                        }
+                        for (let i = 0; i < numSpicchi; i++) { p.push(); p.rotate(i * anglePerSpicchio); if (i % 2 === 1) p.scale(1, -1); p.imageMode(p.CENTER); p.image(baseDrawing, 0, 0); p.pop(); }
                     }
                 };
+                p.keyPressed = function() { if (p.key === ' ') { baseDrawing.clear(); p.background(245); }};
+            };
+            function start() { if (!p5Instance && document.getElementById('p5CanvasContainer')) { labIsActive = true; p5Instance = new p5(sketchCode, 'p5CanvasContainer');} else if (p5Instance) { labIsActive = true; p5Instance.loop();}}
+            function stop() { labIsActive = false; if (p5Instance) { p5Instance.noLoop(); }}
+            return { start, stop };
+        })();
+        
+        const p5StellaLab = (function() {
+            let p5Instance = null;
+            let labIsActive = false;
 
-                p.keyPressed = function() {
-                    if (p.key === ' ') {
-                        baseDrawing.clear();
-                        p.background(245);
+            const sketchCodeStella = function(p) {
+                let sliderStella; 
+                p.setup = function() {
+                    let stellaCanvas = p.createCanvas(600, 600); // Canvas p5 per Stella
+                    stellaCanvas.parent('p5StellaCanvasContainer');
+                    p.angleMode(p.DEGREES);
+                    
+                    let stellaControlsDiv = p.select('#p5StellaControlsContainer');
+                    
+                    // Pulisci eventuali controlli vecchi se setup viene chiamato più volte (improbabile con remove())
+                    if (stellaControlsDiv) stellaControlsDiv.html(''); 
+
+                    let labelP = p.createP("Numero di punte:");
+                    labelP.parent(stellaControlsDiv);
+                    labelP.style('color', '#D0D0D0'); 
+                    labelP.style('margin', '0 5px 0 0');
+
+                    sliderStella = p.createSlider(3, 60, 5, 1);
+                    sliderStella.parent(stellaControlsDiv);
+                    sliderStella.style('width', '150px');
+                };
+
+                p.draw = function() {
+                    p.background(0); // Sfondo nero per questo canvas
+                    p.translate(p.width / 2, p.height / 2 - 40); // MODIFICATO: Sposta tutto un po' più su (-40px)
+
+                    let n = sliderStella.value();
+                    let angleStep = 360 / n;
+                    let r = p.min(p.width, p.height) / 2 * 0.7; // Raggio stella leggermente ridotto
+                    let innerR = r * 0.5;
+
+                    p.noFill(); 
+                    p.stroke(255);    
+                    p.strokeWeight(1.5);
+                    for (let i = 0; i < n; i++) {
+                        p.push();
+                        p.rotate(i * angleStep);
+                        p.beginShape();
+                        p.vertex(0, 0); 
+                        p.vertex(p.cos(-angleStep / 2) * r, p.sin(-angleStep / 2) * r);
+                        p.vertex(p.cos(0) * innerR, p.sin(0) * innerR); 
+                        p.vertex(p.cos(angleStep / 2) * r, p.sin(angleStep / 2) * r);
+                        p.endShape(p.CLOSE);
+                        p.pop();
                     }
+                    
+                    p.push(); // Blocco separato per il testo
+                    // Non usiamo resetMatrix per mantenere la traslazione principale, 
+                    // ma disegniamo il testo relativo alla nuova origine (spostata in alto).
+                    p.noStroke();
+                    p.fill(220); 
+                    p.textAlign(p.CENTER, p.TOP); 
+                    p.textSize(16);
+                    
+                    // Posiziona il testo sotto la stella, tenendo conto dello spostamento verso l'alto.
+                    // La stella è centrata attorno a (0,0) nel sistema traslato. Il suo raggio è 'r'.
+                    let textBlockStartY = r + 30; // Spazio sotto la stella
+
+                    p.text(n + " punte", 0, textBlockStartY);
+                    p.text("Simmetrie: " + n, 0, textBlockStartY + 25);
+                    p.text("Angolo tra punte: " + p.nf(angleStep, 1, 1) + "°", 0, textBlockStartY + 50);
+                    p.pop();
+                    
+                    p.push(); // Blocco per l'arco dell'angolo
+                    p.stroke(255, 0, 0, 150); 
+                    p.noFill();
+                    p.strokeWeight(1);
+                    p.arc(0, 0, r / 2.5, r / 2.5, -angleStep / 2, angleStep / 2); 
+                    p.pop();
                 };
             };
 
-            function startLab() {
-                if (!p5Instance && document.getElementById('p5CanvasContainer')) { 
+            function start() {
+                if (document.getElementById('p5StellaCanvasContainer')) {
+                    if (p5Instance) { // Se esiste già, rimuovila prima di ricrearla
+                        p5Instance.remove();
+                        p5Instance = null;
+                    }
+                    // Pulisci i controlli HTML prima di ricrearli, se p5 li aggiunge al div
+                    const controlsContainer = document.getElementById('p5StellaControlsContainer');
+                    if (controlsContainer) controlsContainer.innerHTML = '';
+
                     labIsActive = true;
-                    p5Instance = new p5(sketchCode, 'p5CanvasContainer');
-                } else if (p5Instance) {
-                    labIsActive = true;
-                    p5Instance.loop(); 
+                    p5Instance = new p5(sketchCodeStella, 'p5StellaCanvasContainer');
                 }
             }
-
-            function stopLab() { 
+            function stop() {
                 labIsActive = false;
                 if (p5Instance) {
-                    p5Instance.noLoop(); 
+                    p5Instance.noLoop();
+                    // Per una pulizia completa quando si cambia vista, rimuovi l'istanza.
+                    // Questo previene anche che i controlli p5 vengano duplicati.
+                    p5Instance.remove();
+                    p5Instance = null;
+                    const controlsContainer = document.getElementById('p5StellaControlsContainer');
+                    if (controlsContainer) controlsContainer.innerHTML = ''; // Pulisci anche i controlli
+                     const canvasContainer = document.getElementById('p5StellaCanvasContainer');
+                    if (canvasContainer) canvasContainer.innerHTML = '';
                 }
             }
-            return { start: startLab, stop: stopLab };
+            return { start, stop };
         })();
 
         const menuLinks = document.querySelectorAll('nav.top-menu li a');
         const views = {
             simulationContainer: document.getElementById('simulationContainer'),
             argomento1: document.getElementById('argomento1'),
-            argomento2: document.getElementById('argomento2'),
-            argomento3: document.getElementById('argomento3'),
+            argomento2: document.getElementById('argomento2'), 
+            argomento3: document.getElementById('argomento3'), 
             argomento4: document.getElementById('argomento4')
         };
 
         function showView(targetId) { 
             Object.values(views).forEach(view => { if (view) view.style.display = 'none'; });
             menuLinks.forEach(link => link.classList.remove('active'));
+            
             autoKaleidoscope.stop(); 
             interactiveKaleidoscopeLab.stop(); 
+            p5StellaLab.stop(); 
             
-            document.body.classList.remove('simulation-active', 'lab-active');
+            document.body.classList.remove('simulation-fullscreen'); // Rinomina da simulation-active
             document.body.style.overflow = 'visible'; 
 
             if (pageFooter) pageFooter.style.display = 'none'; 
             if (homePageTitle) homePageTitle.style.display = 'none'; 
-            if (topMenuNav) topMenuNav.style.display = 'flex';
+            const generalPageTitle = document.querySelector('.page-title-container');
+            if (generalPageTitle) generalPageTitle.style.display = (targetId === 'simulationContainer' ? 'none' : 'block');
 
+            if (topMenuNav) topMenuNav.style.display = 'flex';
 
             const targetViewLink = document.querySelector(`nav.top-menu li a[data-target="${targetId}"]`);
             if (targetViewLink) targetViewLink.classList.add('active');
 
             if (targetId === 'simulationContainer') {
                 if (homePageTitle) homePageTitle.style.display = 'block'; 
-                document.body.classList.add('simulation-active'); 
+                document.body.classList.add('simulation-fullscreen'); 
                 document.body.style.overflow = 'hidden'; 
                 views.simulationContainer.style.display = 'flex';
                 autoKaleidoscope.start(true); 
@@ -654,9 +715,14 @@
                     sectionToShow.style.display = 'block';
                     document.body.style.overflow = 'auto'; 
                     
-                    if (targetId === 'argomento3') { 
+                    if (targetId === 'argomento2') { 
+                        document.body.style.overflow = 'auto'; // Permetti lo scroll anche per la sezione con p5StellaLab
+                        p5StellaLab.start();
+                    } else if (targetId === 'argomento3') { 
+                        document.body.style.overflow = 'auto'; // Assicura che sia scrollabile
                         interactiveKaleidoscopeLab.start(); 
                     }
+
                     if (targetId === 'argomento4') { 
                         if (pageFooter) pageFooter.style.display = 'block';
                     }
@@ -673,7 +739,8 @@
                     const sectionElement = document.getElementById(targetId);
                     if (sectionElement) {
                         const menuHeight = topMenuNav ? topMenuNav.offsetHeight : 0;
-                        const totalOffset = menuHeight; 
+                        const titleHeight = (pageTitleContainer && pageTitleContainer.style.display !== 'none') ? pageTitleContainer.offsetHeight : 0;
+                        const totalOffset = menuHeight + titleHeight; 
                         const elementPosition = sectionElement.getBoundingClientRect().top + window.pageYOffset;
                         const scrollToPosition = elementPosition - totalOffset - 15; 
                         window.scrollTo({ top: Math.max(0, scrollToPosition), behavior: 'smooth' });
